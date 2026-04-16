@@ -39,14 +39,83 @@ document.addEventListener("DOMContentLoaded", function() {
   
   let isHovered = false;
   let isDragging = false;
+  let hasDragged = false;
+  let pauseUntil = 0;
+  let activeSyncTimer = null;
   let activePointerId = null;
   let dragStartX = 0;
   let dragStartTranslate = 0;
   const speed = window.matchMedia('(max-width: 768px)').matches ? 0.06 : 0.1; // 手機端再放慢，降低視覺壓力
   const ease = 0.08; // 絲滑阻尼係數
 
+  function getAllClientItems() {
+    return Array.from(track.querySelectorAll('.client-item'));
+  }
+
+  function setActiveItem(item) {
+    getAllClientItems().forEach(el => el.classList.remove('is-active'));
+    if (item) item.classList.add('is-active');
+  }
+
+  function getClosestItemToViewportCenter() {
+    if (!trackViewport) return null;
+    const viewportRect = trackViewport.getBoundingClientRect();
+    const viewportCenter = viewportRect.left + viewportRect.width / 2;
+    let closest = null;
+    let minDistance = Number.POSITIVE_INFINITY;
+
+    getAllClientItems().forEach(item => {
+      const rect = item.getBoundingClientRect();
+      const itemCenter = rect.left + rect.width / 2;
+      const distance = Math.abs(itemCenter - viewportCenter);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closest = item;
+      }
+    });
+
+    return closest;
+  }
+
+  function syncActiveToCenter(delay = 0) {
+    if (activeSyncTimer) {
+      clearTimeout(activeSyncTimer);
+    }
+
+    activeSyncTimer = setTimeout(() => {
+      setActiveItem(getClosestItemToViewportCenter());
+    }, delay);
+  }
+
+  function pauseAutoScroll(ms = 1200) {
+    pauseUntil = Date.now() + ms;
+  }
+
+  function centerItemInViewport(item, shouldPause = true) {
+    if (!item || !trackViewport) return;
+    const viewportRect = trackViewport.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+    const viewportCenter = viewportRect.left + viewportRect.width / 2;
+    const itemCenter = itemRect.left + itemRect.width / 2;
+    const delta = viewportCenter - itemCenter;
+
+    targetTranslate += delta;
+
+    // 保持與按鈕/拖曳一致的格線吸附手感
+    const snapSteps = Math.round((targetTranslate - centeringOffset) / itemWidth);
+    targetTranslate = snapSteps * itemWidth + centeringOffset;
+
+    if (shouldPause) {
+      pauseAutoScroll();
+    }
+
+    setActiveItem(item);
+    syncActiveToCenter(260);
+  }
+
   function animateCarousel() {
-    if (!isHovered && !isDragging) {
+    const isAutoScrollPaused = Date.now() < pauseUntil;
+    if (!isHovered && !isDragging && !isAutoScrollPaused) {
       targetTranslate -= speed;
     }
 
@@ -70,6 +139,7 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   requestAnimationFrame(animateCarousel);
+  syncActiveToCenter();
 
   // 處理視窗縮放，確保縮放時 Logo 依然死死咬住畫面中央
   window.addEventListener('resize', () => {
@@ -79,20 +149,26 @@ document.addEventListener("DOMContentLoaded", function() {
     centeringOffset = getCenteringOffset();
     targetTranslate += (centeringOffset - oldOffset);
     currentTranslate += (centeringOffset - oldOffset);
+    syncActiveToCenter(120);
   });
 
   // 6. 按鈕控制：點擊時精準對齊下一個網格
   nextBtn.addEventListener('click', () => {
     targetTranslate = Math.round((targetTranslate - centeringOffset) / itemWidth) * itemWidth + centeringOffset - itemWidth;
+    pauseAutoScroll(800);
+    syncActiveToCenter(260);
   });
 
   prevBtn.addEventListener('click', () => {
     targetTranslate = Math.round((targetTranslate - centeringOffset) / itemWidth) * itemWidth + centeringOffset + itemWidth;
+    pauseAutoScroll(800);
+    syncActiveToCenter(260);
   });
 
   function onPointerDown(e) {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     isDragging = true;
+    hasDragged = false;
     isHovered = true;
     activePointerId = e.pointerId;
     dragStartX = e.clientX;
@@ -107,6 +183,7 @@ document.addEventListener("DOMContentLoaded", function() {
   function onPointerMove(e) {
     if (!isDragging || e.pointerId !== activePointerId) return;
     const deltaX = e.clientX - dragStartX;
+    if (Math.abs(deltaX) > 4) hasDragged = true;
     targetTranslate = dragStartTranslate + deltaX;
     currentTranslate = targetTranslate;
   }
@@ -122,6 +199,8 @@ document.addEventListener("DOMContentLoaded", function() {
     // 放手後吸附到最近的一格，維持按鈕切換相同手感
     const snapSteps = Math.round((targetTranslate - centeringOffset) / itemWidth);
     targetTranslate = snapSteps * itemWidth + centeringOffset;
+    pauseAutoScroll(700);
+    syncActiveToCenter(220);
   }
 
   if (trackViewport) {
@@ -136,6 +215,12 @@ document.addEventListener("DOMContentLoaded", function() {
   track.addEventListener('mouseleave', () => isHovered = false);
   track.addEventListener('touchstart', () => isHovered = true, { passive: true });
   track.addEventListener('touchend', () => isHovered = false, { passive: true });
+
+  track.addEventListener('click', (e) => {
+    const item = e.target.closest('.client-item');
+    if (!item || hasDragged) return;
+    centerItemInViewport(item, true);
+  });
 });
 
 // CAREER HIGHLIGHTS

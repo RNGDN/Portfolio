@@ -472,14 +472,42 @@ body {
   color: #fff;
   padding: 100px 0;
   font-family: 'Space Mono', 'Courier New', monospace;
+  --client-frame-line: rgba(255, 255, 255, 0.16);
+  --client-frame-line-strong: rgba(255, 255, 255, 0.28);
+}
+
+.featured-clients-section,
+.featured-clients-section * {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.featured-clients-section::before,
+.featured-clients-section::after {
+  content: '';
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.95) 0 6px, var(--client-frame-line) 6px calc(100% - 6px), rgba(255, 255, 255, 0.95) calc(100% - 6px));
+  pointer-events: none;
+}
+
+.featured-clients-section::before {
+  top: 46px;
+}
+
+.featured-clients-section::after {
+  bottom: 24px;
 }
 
 /* 輪播視窗限制設定 (.carousel-wrapper) */
 .carousel-wrapper {
   width: 100%;
   overflow: hidden; /* [關鍵修正 1]：限制視窗，隱藏超出內容，解決位置跑掉的核心 */
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--client-frame-line);
+  border-bottom: 1px solid var(--client-frame-line);
   position: relative;
   display: flex;
 }
@@ -506,9 +534,14 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  border-right: 1px solid var(--client-frame-line);
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.client-item:first-child {
+  border-left: 1px solid var(--client-frame-line);
 }
 
 /* =========================================
@@ -516,11 +549,12 @@ body {
 ========================================= */
 .crosshair {
   position: absolute;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.45);
   font-size: 20px; /* 大號字體 */
   font-family: sans-serif;
   line-height: 1;
   font-weight: 300;
+  transition: color 0.3s ease;
   pointer-events: none; /* 防止干擾滑鼠事件 */
 }
 
@@ -534,6 +568,58 @@ body {
 .crosshair.top-right { top: -11px; right: -6px; }
 .crosshair.bottom-left { bottom: -8px; left: -6px; }
 .crosshair.bottom-right { bottom: -8px; right: -6px; }
+
+/* 避免右側十字準星跨格造成下一格左下白色突起 */
+.featured-clients-section .client-item .crosshair.top-left {
+  top: 8px;
+  left: 8px;
+  transform: none;
+}
+
+.featured-clients-section .crosshair {
+  width: 14px;
+  height: 14px;
+  font-size: 0;
+  line-height: 0;
+}
+
+.featured-clients-section .crosshair::before,
+.featured-clients-section .crosshair::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: currentColor;
+  transform: translate(-50%, -50%);
+}
+
+.featured-clients-section .crosshair::before {
+  width: 12px;
+  height: 1px;
+}
+
+.featured-clients-section .crosshair::after {
+  width: 1px;
+  height: 12px;
+}
+
+.featured-clients-section .client-item .crosshair.top-right {
+  top: 8px;
+  right: 8px;
+  transform: none;
+}
+
+.featured-clients-section .client-item .crosshair.bottom-left {
+  bottom: 8px;
+  left: 8px;
+  transform: none;
+}
+
+.featured-clients-section .client-item .crosshair.bottom-right {
+  bottom: 8px;
+  right: 8px;
+  transform: none;
+}
 
 /* Logo 佔位文字/圖片設定 */
 .logo-placeholder {
@@ -557,14 +643,15 @@ body {
   bottom: 20px;
   font-size: 10px;
   letter-spacing: 2px;
-  color: #fff;
-  opacity: 0;
+  color: rgba(255, 255, 255, 0.9);
+  opacity: 0.4;
   transition: opacity 0.3s ease;
 }
 
 /* Hover 狀態 (類似 Treyarch 的效果) */
 .client-item:hover {
   background-color: rgba(255, 255, 255, 0.02);
+  border-right-color: var(--client-frame-line-strong);
 }
 .client-item:hover .logo-placeholder {
   color: #fff; /* 點亮 Logo */
@@ -574,15 +661,31 @@ body {
 }
 /* Hover 時的細虛線框效果 */
 .client-item::after {
-  content: '';
-  position: absolute;
-  top: 10px; left: 10px; right: 10px; bottom: 10px;
-  border: 2px dashed rgba(255, 255, 255, 0);
-  transition: border-color 0.3s ease;
-  pointer-events: none;
+  content: none;
 }
 .client-item:hover::after {
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: transparent;
+}
+
+.client-item.is-active {
+  background-color: transparent;
+  border-right-color: rgba(255, 255, 255, 0.65);
+}
+
+.client-item.is-active .logo-placeholder {
+  color: #fff;
+}
+
+.client-item.is-active .hover-text {
+  opacity: 1;
+}
+
+.client-item.is-active .crosshair {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.client-item.is-active::after {
+  border-color: transparent;
 }
 
 /* 底部控制按鈕 */
