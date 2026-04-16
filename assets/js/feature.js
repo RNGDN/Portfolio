@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const track = document.getElementById('clientTrack');
   const prevBtn = document.getElementById('clientPrevBtn');
   const nextBtn = document.getElementById('clientNextBtn');
+  const trackViewport = track ? track.parentElement : null;
   if (!track || !prevBtn || !nextBtn) return;
   
   // 1. 備份原始項目並取得總寬度
@@ -37,11 +38,15 @@ document.addEventListener("DOMContentLoaded", function() {
   let currentTranslate = targetTranslate;
   
   let isHovered = false;
+  let isDragging = false;
+  let activePointerId = null;
+  let dragStartX = 0;
+  let dragStartTranslate = 0;
   const speed = window.matchMedia('(max-width: 768px)').matches ? 0.06 : 0.1; // 手機端再放慢，降低視覺壓力
   const ease = 0.08; // 絲滑阻尼係數
 
   function animateCarousel() {
-    if (!isHovered) {
+    if (!isHovered && !isDragging) {
       targetTranslate -= speed;
     }
 
@@ -84,6 +89,48 @@ document.addEventListener("DOMContentLoaded", function() {
   prevBtn.addEventListener('click', () => {
     targetTranslate = Math.round((targetTranslate - centeringOffset) / itemWidth) * itemWidth + centeringOffset + itemWidth;
   });
+
+  function onPointerDown(e) {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    isDragging = true;
+    isHovered = true;
+    activePointerId = e.pointerId;
+    dragStartX = e.clientX;
+    dragStartTranslate = targetTranslate;
+    track.classList.add('is-dragging');
+    if (trackViewport) trackViewport.classList.add('is-dragging');
+    if (trackViewport && trackViewport.setPointerCapture) {
+      trackViewport.setPointerCapture(e.pointerId);
+    }
+  }
+
+  function onPointerMove(e) {
+    if (!isDragging || e.pointerId !== activePointerId) return;
+    const deltaX = e.clientX - dragStartX;
+    targetTranslate = dragStartTranslate + deltaX;
+    currentTranslate = targetTranslate;
+  }
+
+  function onPointerEnd(e) {
+    if (!isDragging || e.pointerId !== activePointerId) return;
+    isDragging = false;
+    isHovered = false;
+    activePointerId = null;
+    track.classList.remove('is-dragging');
+    if (trackViewport) trackViewport.classList.remove('is-dragging');
+
+    // 放手後吸附到最近的一格，維持按鈕切換相同手感
+    const snapSteps = Math.round((targetTranslate - centeringOffset) / itemWidth);
+    targetTranslate = snapSteps * itemWidth + centeringOffset;
+  }
+
+  if (trackViewport) {
+    trackViewport.addEventListener('pointerdown', onPointerDown);
+    trackViewport.addEventListener('pointermove', onPointerMove);
+    trackViewport.addEventListener('pointerup', onPointerEnd);
+    trackViewport.addEventListener('pointercancel', onPointerEnd);
+    trackViewport.addEventListener('pointerleave', onPointerEnd);
+  }
 
   track.addEventListener('mouseenter', () => isHovered = true);
   track.addEventListener('mouseleave', () => isHovered = false);
@@ -140,6 +187,7 @@ const portfolioItems = [
 ];
 
 let currentIndex = 0;
+let imageSwapToken = 0;
 
 const els = {
   image: document.getElementById('artwork-img'),
@@ -155,6 +203,8 @@ const els = {
   nextBtn: document.getElementById('portfolioNextBtn')
 };
 
+const portfolioSwipeArea = document.querySelector('.image-container');
+
 function initIndicators() {
   els.indicatorContainer.innerHTML = '';
   portfolioItems.forEach((_, index) => {
@@ -165,22 +215,24 @@ function initIndicators() {
 }
 
 function updateUIWithAnimation() {
-  els.image.style.opacity = 0;
   els.desc.style.opacity = 0; 
   els.title.style.opacity = 0;
   
-  setTimeout(() => {
-    const item = portfolioItems[currentIndex];
-    
+  const item = portfolioItems[currentIndex];
+  const swapToken = ++imageSwapToken;
+
+  const applyContent = () => {
+    if (swapToken !== imageSwapToken) return;
+
     els.image.src = item.image;
     els.edition.textContent = item.edition;
-    
+
     if (item.projectUrl) {
       els.title.innerHTML = `<a href="${item.projectUrl}" target="_blank" rel="noopener noreferrer">${item.title}</a>`;
     } else {
       els.title.textContent = item.title;
     }
-    
+
     els.desc.textContent = item.description;
     els.dim.textContent = item.dimensions;
     els.pages.textContent = item.pages;
@@ -192,24 +244,82 @@ function updateUIWithAnimation() {
       ind.classList.toggle('active', index === currentIndex);
     });
 
-    els.image.style.opacity = 1;
     els.desc.style.opacity = 1;
     els.title.style.opacity = 1;
-    
-    els.image.style.transition = 'opacity 0.4s ease';
-    els.desc.style.transition = 'opacity 0.4s ease';
-    els.title.style.transition = 'opacity 0.4s ease';
-  }, 200); 
+
+    els.desc.style.transition = 'opacity 0.25s ease';
+    els.title.style.transition = 'opacity 0.25s ease';
+  };
+
+  const preloadedImage = new Image();
+  preloadedImage.onload = applyContent;
+  preloadedImage.onerror = applyContent;
+  preloadedImage.src = item.image;
+
+  if (preloadedImage.complete) {
+    applyContent();
+  }
 }
 
-els.prevBtn.addEventListener('click', () => {
+function goToPrevPortfolioItem() {
   currentIndex = (currentIndex - 1 + portfolioItems.length) % portfolioItems.length;
   updateUIWithAnimation();
-});
+}
 
-els.nextBtn.addEventListener('click', () => {
+function goToNextPortfolioItem() {
   currentIndex = (currentIndex + 1) % portfolioItems.length;
   updateUIWithAnimation();
+}
+
+els.prevBtn.addEventListener('click', goToPrevPortfolioItem);
+els.nextBtn.addEventListener('click', goToNextPortfolioItem);
+
+if (portfolioSwipeArea) {
+  let isPortfolioDragging = false;
+  let portfolioPointerId = null;
+  let portfolioStartX = 0;
+  let portfolioDeltaX = 0;
+
+  portfolioSwipeArea.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    isPortfolioDragging = true;
+    portfolioPointerId = e.pointerId;
+    portfolioStartX = e.clientX;
+    portfolioDeltaX = 0;
+    portfolioSwipeArea.classList.add('is-dragging');
+    if (portfolioSwipeArea.setPointerCapture) {
+      portfolioSwipeArea.setPointerCapture(e.pointerId);
+    }
+  });
+
+  portfolioSwipeArea.addEventListener('pointermove', (e) => {
+    if (!isPortfolioDragging || e.pointerId !== portfolioPointerId) return;
+    portfolioDeltaX = e.clientX - portfolioStartX;
+  });
+
+  const finishPortfolioSwipe = (e) => {
+    if (!isPortfolioDragging || e.pointerId !== portfolioPointerId) return;
+    isPortfolioDragging = false;
+    portfolioPointerId = null;
+    portfolioSwipeArea.classList.remove('is-dragging');
+
+    const swipeThreshold = 40;
+    if (portfolioDeltaX <= -swipeThreshold) {
+      goToNextPortfolioItem();
+    } else if (portfolioDeltaX >= swipeThreshold) {
+      goToPrevPortfolioItem();
+    }
+  };
+
+  portfolioSwipeArea.addEventListener('pointerup', finishPortfolioSwipe);
+  portfolioSwipeArea.addEventListener('pointercancel', finishPortfolioSwipe);
+  portfolioSwipeArea.addEventListener('pointerleave', finishPortfolioSwipe);
+}
+
+[els.prevBtn, els.nextBtn].forEach((button) => {
+  if (!button) return;
+  button.addEventListener('pointerdown', (event) => event.stopPropagation());
+  button.addEventListener('click', (event) => event.stopPropagation());
 });
 
 initIndicators();
@@ -225,6 +335,9 @@ const swiper = new Swiper(".mySwiper", {
     spaceBetween: 5,        // 極小的圖片間距，營造連貫感
     
     loop: true,             // 開啟無限輪播
+    allowTouchMove: true,
+    simulateTouch: true,
+    touchRatio: 1,
     
     grabCursor: true,       
     speed: 1000,            // 配合 CSS Ease 特效的速度

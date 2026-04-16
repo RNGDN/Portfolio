@@ -203,10 +203,11 @@ body {
     left: 0;
     right: 0;
     width: 100%;
-    padding: 20px 25px; 
+    padding: calc(14px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) 14px calc(16px + env(safe-area-inset-left));
     display: flex;
-    justify-content: space-between; 
+    justify-content: flex-start;
     align-items: center;
+    min-height: 64px;
   }
 
   .mobile-menu-overlay {
@@ -221,6 +222,7 @@ body {
     transform: none;
     flex: 1 1 auto;
     min-width: 0;
+    max-width: calc(100% - 52px);
   }
   
   /* 確保手機主導覽列 Logo 的粗體風格 */
@@ -242,8 +244,12 @@ body {
   /* 顯示漢堡按鈕，並確保其 monospace 風格 */
   .mobile-menu-toggle { 
     display: block; 
-    flex: 0 0 auto;
-    margin-left: 12px;
+    position: absolute;
+    top: calc(14px + env(safe-area-inset-top));
+    right: calc(16px + env(safe-area-inset-right));
+    margin-left: 0;
+    padding: 2px 0;
+    line-height: 1;
     font-family: monospace; /* 確保為 monospace */
     font-weight: 400; /* 細體 */
   } 
@@ -1053,7 +1059,8 @@ body {
 
 @media screen and (max-width: 420px) {
   .top-nav {
-    padding: 16px;
+    padding: calc(12px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right)) 12px calc(12px + env(safe-area-inset-left));
+    min-height: 58px;
   }
 
   .mobile-menu-overlay {
@@ -1069,6 +1076,11 @@ body {
   .mobile-link {
     font-size: 30px;
     padding: 16px 0;
+  }
+
+  .mobile-menu-toggle {
+    top: calc(12px + env(safe-area-inset-top));
+    right: calc(12px + env(safe-area-inset-right));
   }
 
   .hero-bottom-info .bottom-right {
@@ -1203,7 +1215,7 @@ body {
   --parallax-y: 50%;
   
   /* 放入你提供的圖片網址 */
-  background-image: linear-gradient(to bottom, rgba(5, 5, 5, 0.28) 0%, rgba(5, 5, 5, 0.62) 55%, rgba(5, 5, 5, 0.98) 100%), url('images/events/01.jpg');
+  background-image: linear-gradient(to bottom, rgba(5, 5, 5, 0.28) 0%, rgba(5, 5, 5, 0.62) 55%, rgba(5, 5, 5, 0.98) 100%), url('../../images/events/01.jpg');
   background-size: var(--parallax-zoom);
   background-position: center var(--parallax-y);
   
@@ -1324,6 +1336,7 @@ body {
 
 .portfolio-section {
   display: flex;
+  flex-wrap: wrap;
   background-color: #050505;
   color: #a0a0a0;
   font-family: 'Share Tech Mono', monospace;
@@ -1334,6 +1347,18 @@ body {
   box-sizing: border-box;
   min-height: 100vh;
   align-items: center;
+  touch-action: pan-y;
+}
+
+.portfolio-section > .clients-header {
+  flex: 0 0 100%;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.portfolio-section > .clients-header .title-solid,
+.portfolio-section > .clients-header .title-outline {
+  text-align: center;
 }
 
 .left-panel {
@@ -1358,6 +1383,7 @@ body {
   display: block;
   object-fit: cover;
   object-position: center;
+  pointer-events: none;
 }
 
 .nav-btn {
@@ -1581,6 +1607,7 @@ body {
 .swiper {
     width: 100%;
     height: 80vh;
+  touch-action: pan-y;
 }
 
 .swiper-wrapper,
@@ -1611,6 +1638,7 @@ body {
     height: 100%;
     overflow: hidden;
     border-radius: 2px;
+  touch-action: pan-y;
 }
 
 .slide-content img {
@@ -1887,8 +1915,21 @@ body {
       min-height: 100svh;
       --parallax-zoom: cover;
       --parallax-y: 50%;
-      background-position: center 50%;
+      background-image: url('../../images/events/01.jpg');
+      background-size: cover !important;
+      background-position: center center !important;
+      background-repeat: no-repeat;
+      background-color: #111;
       transition: none;
+    }
+
+    .parallax-overlay {
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    .parallax-section::after {
+      height: 18vh;
+      background: linear-gradient(to bottom, rgba(5, 5, 5, 0) 0%, rgba(5, 5, 5, 0.22) 58%, rgba(5, 5, 5, 0.72) 100%);
     }
 
     .parallax-content {
