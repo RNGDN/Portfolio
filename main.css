@@ -1202,7 +1202,7 @@ body {
   --parallax-y: 50%;
   
   /* 放入你提供的圖片網址 */
-  background-image: linear-gradient(to bottom, rgba(5, 5, 5, 0.05) 0%, rgba(5, 5, 5, 0.3) 55%, rgba(5, 5, 5, 0.9) 100%), url('images/events/01.jpg');
+  background-image: linear-gradient(to bottom, rgba(5, 5, 5, 0.28) 0%, rgba(5, 5, 5, 0.62) 55%, rgba(5, 5, 5, 0.98) 100%), url('images/events/01.jpg');
   background-size: var(--parallax-zoom);
   background-position: center var(--parallax-y);
   
@@ -1226,7 +1226,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.35); /* 降低遮罩強度，讓底圖與漸層更自然 */
+  background: rgba(0, 0, 0, 0.6); /* 加深底圖，讓標題區更有對比 */
   z-index: 1;
 }
 
