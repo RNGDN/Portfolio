@@ -916,7 +916,12 @@ body {
 }
 
 @media screen and (max-width: 768px) {
-  .hero-section,
+  .hero-section {
+    min-height: 100vh;
+    min-height: 100svh;
+    height: 100dvh;
+  }
+
   .parallax-group,
   .absolute-content {
     min-height: 50svh;
