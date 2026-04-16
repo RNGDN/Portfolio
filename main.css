@@ -878,7 +878,7 @@ body {
     margin-bottom: 20px;
   }
   .career-row {
-    padding: 0 20px;
+    padding: 0;
   }
   .item-title-col {
     width: 100%;
@@ -1022,7 +1022,7 @@ body {
   }
 
   .career-row {
-    padding: 0 20px;
+    padding: 0;
   }
 
   .sidebar-label {
