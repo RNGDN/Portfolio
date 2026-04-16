@@ -252,7 +252,7 @@ const portfolioItems = [
     title: "DREAM REALITY",
     projectUrl: "https://www.behance.net/gallery/202521069/MFA-Thesis-Book-Slides-Dream-Reality",
     image: "images/TB.jpg",
-    description: "Every day, we experience two realities. The first is experienced when we are awake. The second is experienced when we are asleep, dreaming. Dreams are often viewed as experiences that are out of our control. For me, this is not the case. My thesis is an exploration into the unique realm of lucid dreaming, a state where the dreamer is aware they are dreaming. As a result of this awareness, the dreamer has the ability to influence their own dream narrative. Individuals who lucid dream often wake up with a sharp sense of distinguishing reality from dreams. This can stimulate deep reflection into the dreamer's inner life and place in the world. It is a mysterious and fascinating experience - one I practice myself.",
+    description: "Every day, we experience two realities. The first is experienced when we are awake. The second is experienced when we are asleep, dreaming. Dreams are often viewed as experiences that are out of our control. For me, this is not the case. My thesis is an exploration into the unique realm of lucid dreaming, a state where the dreamer is aware they are dreaming. As a result of this awareness, the dreamer has the ability to influence their own dream narrative. ",
     dimensions: "156 x 235 mm",
     pages: "113 pages",
     language: "ENGLISH",

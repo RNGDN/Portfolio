@@ -330,7 +330,7 @@ body {
 /* 字體排版 */
 .main-title { font-size: 10vw; font-weight: 900; margin: 0; text-transform: uppercase; font-family: sans-serif; letter-spacing: -2px; }
 .project-title { font-size: clamp(3rem, 8vw, 6rem); margin: 0 0 20px 0; letter-spacing: 10px; font-family: sans-serif; text-transform: uppercase; }
-.project-desc { font-size: 10px; line-height: 1.8; max-width: 500px; color: #ccc; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
+.project-desc { font-size: 10px; line-height: 1.8; max-width: 500px; color: #e7e7e7; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
 
 /* 專案連結按鈕 */
 .view-project {
@@ -1037,8 +1037,8 @@ body {
 
   .parallax-group,
   .absolute-content {
-    min-height: 50svh;
-    height: 50svh;
+    min-height: 90svh;
+    height: 90svh;
   }
 
   .parallax-video {
@@ -1149,6 +1149,9 @@ body {
   .career-content {
     gap: 14px;
     flex-direction: column;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 10px;
   }
 
   .career-sidebar {
@@ -1157,7 +1160,10 @@ body {
   }
 
   .career-row {
-    padding: 0;
+    width: 100%;
+    max-width: 980px;
+    margin: 4px auto 0;
+    padding: 0 10px;
   }
 
   .sidebar-label {
@@ -1215,6 +1221,12 @@ body {
     display: none;
   }
 
+  .parallax-group,
+  .absolute-content {
+    min-height: 62svh;
+    height: 62svh;
+  }
+
   .item-title-col {
     width: 100%;
   }
@@ -1225,6 +1237,7 @@ body {
 
   .item-icon-col {
     top: 14px;
+    right: 8px;
   }
 
   .clients-header {
