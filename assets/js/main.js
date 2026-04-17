@@ -18,17 +18,18 @@ function updateParallax() {
       heroVideo.style.transform = 'translateY(0px) scale(1.05)';
     }
 
-    const impactSection = document.querySelector('.impact-section');
-    if (impactSection) {
-      impactSection.style.transform = 'translateY(0px)';
-      impactSection.style.opacity = '1';
-      impactSection.style.filter = 'brightness(1)';
-    }
+    const blackPanelSections = document.querySelectorAll('.featured-clients-section, .career-section, .impact-section');
+    blackPanelSections.forEach(section => {
+      section.style.transform = 'translateY(0px)';
+      section.style.opacity = '1';
+      section.style.filter = 'brightness(1)';
+    });
 
     const parallaxSection = document.querySelector('.parallax-section');
     if (parallaxSection) {
       parallaxSection.style.setProperty('--parallax-zoom', 'cover');
       parallaxSection.style.setProperty('--parallax-y', '50%');
+      parallaxSection.style.setProperty('--parallax-reveal', '1');
     }
 
     const groups = document.querySelectorAll('.parallax-group .parallax-video');
@@ -66,28 +67,33 @@ function updateParallax() {
     }
   });
 
-  // 3. 進入 parallax 區塊前，讓 impact 黑色數字面板像被往上移走，
-  //    同時讓底圖由超大尺寸慢慢收回，做出「揭開」感。
-  const impactSection = document.querySelector('.impact-section');
+  // 3. 進入 parallax 區塊前，讓上方黑色內容區像同一塊面板被拉走，
+  //    並揭露下方固定於中線的內容。
+  const blackPanelSections = document.querySelectorAll('.featured-clients-section, .career-section, .impact-section');
   const parallaxSection = document.querySelector('.parallax-section');
-  if (impactSection && parallaxSection) {
+  if (blackPanelSections.length > 0 && parallaxSection) {
     const parallaxTop = parallaxSection.getBoundingClientRect().top;
-    const start = window.innerHeight * 0.95;
-    const end = window.innerHeight * 0.05;
+    const start = window.innerHeight * 1.05;
+    const end = window.innerHeight * 0.1;
     const rawProgress = (start - parallaxTop) / (start - end);
     const progress = Math.min(Math.max(rawProgress, 0), 1);
+    const revealProgress = Math.min(Math.max((progress - 0.03) / 0.97, 0), 1);
 
-    const liftY = progress * 170;
-    const fade = 1 - progress * 0.5;
-    const dim = 1 - progress * 0.2;
+    const liftY = progress * 220;
+    const fade = 1 - progress * 0.45;
+    const dim = 1 - progress * 0.24;
     const zoom = 138 - progress * 26;
     const posY = 56 - progress * 8;
 
-    impactSection.style.transform = `translateY(${-liftY}px)`;
-    impactSection.style.opacity = String(fade);
-    impactSection.style.filter = `brightness(${dim})`;
+    blackPanelSections.forEach(section => {
+      section.style.transform = `translateY(${-liftY}px)`;
+      section.style.opacity = String(fade);
+      section.style.filter = `brightness(${dim})`;
+    });
+
     parallaxSection.style.setProperty('--parallax-zoom', `${zoom}%`);
     parallaxSection.style.setProperty('--parallax-y', `${posY}%`);
+    parallaxSection.style.setProperty('--parallax-reveal', String(revealProgress));
   }
   
   ticking = false;
@@ -116,8 +122,8 @@ document.addEventListener("DOMContentLoaded", () => {
     animationToken += 1;
     const currentToken = animationToken;
 
-    // 這裡設定動畫總長度，數字越大轉得越慢。
-    const animationDuration = 1800;
+    // 縮短總時長，讓數字更快到定位。
+    const animationDuration = 1000;
 
     counters.forEach(counter => {
       const target = +counter.getAttribute('data-target');
@@ -130,10 +136,10 @@ document.addEventListener("DOMContentLoaded", () => {
         // 計算目前進度 (0 到 1)
         const progress = Math.min((currentTime - startTime) / animationDuration, 1);
         
-        // 緩動公式 (Ease-out): 讓數字一開始跑比較快，最後慢慢停下
-        const easeOut = progress * (2 - progress); 
+        // 緩動公式 (Ease-in): 一開始慢，後段加速。
+        const easeIn = progress * progress * progress;
         
-        counter.innerText = Math.floor(easeOut * target);
+        counter.innerText = Math.floor(easeIn * target);
 
         if (progress < 1) {
           requestAnimationFrame(step); // 繼續下一幀動畫
