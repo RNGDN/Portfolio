@@ -329,13 +329,13 @@ body {
 
 /* 字體排版 */
 .main-title { font-size: 10vw; font-weight: 900; margin: 0; text-transform: uppercase; font-family: sans-serif; letter-spacing: -2px; }
-.project-title { font-size: clamp(3rem, 8vw, 6rem); margin: 0 0 20px 0; letter-spacing: 10px; font-family: sans-serif; text-transform: uppercase; }
+.project-title { font-size: clamp(1.8rem, 4.8vw, 3.6rem); margin: 0 0 5px 0; letter-spacing: 4px; font-family: 'League Spartan', sans-serif; font-weight: 800; text-transform: uppercase; line-height: 0.95; }
 .project-desc { font-size: 10px; line-height: 1.8; max-width: 500px; color: #e7e7e7; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
 
 /* 專案連結按鈕 */
 .view-project {
   display: inline-block;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   color: #fff;
   text-decoration: none;
   font-size: 10px;
@@ -1080,9 +1080,10 @@ body {
   }
 
   .project-title {
-    font-size: clamp(2rem, 11vw, 3.25rem);
-    margin-bottom: 12px;
-    letter-spacing: 4px;
+    font-size: clamp(1.45rem, 8vw, 2.25rem);
+    margin-bottom: 0px;
+    letter-spacing: 2px;
+    line-height: 1;
   }
 
   .project-desc {
@@ -1093,7 +1094,7 @@ body {
   }
 
   .view-project {
-    margin-top: 14px;
+    margin-top: 11px;
     font-size: 11px;
   }
 
