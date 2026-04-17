@@ -273,6 +273,7 @@ const portfolioItems = [
 
 let currentIndex = 0;
 let imageSwapToken = 0;
+const portfolioImageCache = new Map();
 
 const els = {
   image: document.getElementById('artwork-img'),
@@ -290,6 +291,21 @@ const els = {
 
 const portfolioSwipeArea = document.querySelector('.image-container');
 
+function preloadPortfolioImages() {
+  portfolioItems.forEach((item) => {
+    if (portfolioImageCache.has(item.image)) return;
+
+    const image = new Image();
+    image.decoding = 'async';
+    image.src = item.image;
+    portfolioImageCache.set(item.image, image);
+
+    if (image.decode) {
+      image.decode().catch(() => {});
+    }
+  });
+}
+
 function initIndicators() {
   els.indicatorContainer.innerHTML = '';
   portfolioItems.forEach((_, index) => {
@@ -305,11 +321,9 @@ function updateUIWithAnimation() {
   
   const item = portfolioItems[currentIndex];
   const swapToken = ++imageSwapToken;
-
   const applyContent = () => {
     if (swapToken !== imageSwapToken) return;
 
-    els.image.src = item.image;
     els.edition.textContent = item.edition;
 
     if (item.projectUrl) {
@@ -336,14 +350,19 @@ function updateUIWithAnimation() {
     els.title.style.transition = 'opacity 0.25s ease';
   };
 
-  const preloadedImage = new Image();
-  preloadedImage.onload = applyContent;
-  preloadedImage.onerror = applyContent;
-  preloadedImage.src = item.image;
+  applyContent();
+  els.image.src = item.image;
 
-  if (preloadedImage.complete) {
-    applyContent();
+  const cachedImage = portfolioImageCache.get(item.image);
+  if (cachedImage && cachedImage.complete) return;
+
+  const fallbackImage = cachedImage || new Image();
+  if (!cachedImage) {
+    portfolioImageCache.set(item.image, fallbackImage);
   }
+
+  fallbackImage.decoding = 'async';
+  fallbackImage.src = item.image;
 }
 
 function goToPrevPortfolioItem() {
@@ -408,6 +427,7 @@ if (portfolioSwipeArea) {
 });
 
 initIndicators();
+preloadPortfolioImages();
 updateUIWithAnimation();
 
 

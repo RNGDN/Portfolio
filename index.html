@@ -14,6 +14,8 @@
     <link type="image/x-icon" href="icon.ico" rel="shortcut icon">
     <link type="image/x-icon" href="icon.ico" rel="bookmark">
     <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="preload" as="image" href="images/TB.jpg">
+    <link rel="preload" as="image" href="images/YB.jpg">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <script src="assets/js/navbar.js" defer></script>
     <script src="assets/js/main.js" defer></script>
@@ -561,7 +563,7 @@
       </button>
 
       <div class="image-container">
-        <img id="artwork-img" src="images/TB.jpg" alt="Portfolio artwork">
+        <img id="artwork-img" src="images/TB.jpg" alt="Portfolio artwork" decoding="async" fetchpriority="high">
       </div>
 
       <button id="portfolioNextBtn" class="nav-btn" aria-label="Next portfolio item">
