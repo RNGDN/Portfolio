@@ -219,7 +219,7 @@ body {
   }
 
   .mobile-menu-overlay {
-    padding: 20px 25px;
+    padding: calc(14px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) 14px calc(16px + env(safe-area-inset-left));
   }
   .nav-left, .nav-right { display: none; } /* 隱藏桌面選單 */
   
@@ -247,6 +247,10 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .menu-header .logo-link {
+    margin-top: 9px;
   }
 
   /* 顯示漢堡按鈕，並確保其 monospace 風格 */
