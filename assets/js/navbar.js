@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
 
+  // mark that JS has initialized so CSS can reveal interactive UI without flashing
+  try { document.body.classList.add('js-ready'); } catch(e){}
+
   // --- 1. 背景影片播放防護 ---
   const heroVideo = document.getElementById('hero-video');
   if (heroVideo) {
@@ -30,7 +33,24 @@ document.addEventListener("DOMContentLoaded", function() {
       e.preventDefault();
       updateDesktopMenu(this);
       // 【修改文字： console 輸出改為 Harry Liao 相關】
-      console.log('桌面選單準備切換，目標網址:', this.getAttribute('href'));
+      const href = this.getAttribute('href');
+      console.log('桌面選單準備切換，目標網址:', href);
+      // Normalize href -> page name from hash (eg '/#work' -> 'work') or empty for home
+      let page = '';
+      if (href && href.indexOf('#') !== -1) {
+        page = href.split('#')[1] || '';
+      } else if (href === '/' || href === '/index.html') {
+        page = '';
+      } else if (href && href.startsWith('/')) {
+        page = href.replace(/^\/+/, '').replace(/\/+$/, '');
+      }
+
+      if (page === 'about' && window.openAbout) { window.openAbout(); return; }
+      if (page === 'work' && window.openWork) { window.openWork(); return; }
+      if (page === 'contact' && window.openContact) { window.openContact(); return; }
+      // If desktop Home clicked, navigate to the real index page
+      if (page === '') { window.location.href = '/'; return; }
+      // 其他路由仍保留預設行為（可自行改為 client-side 路由）
     });
   });
 
@@ -38,12 +58,22 @@ document.addEventListener("DOMContentLoaded", function() {
   logoLinks.forEach(logo => {
     logo.addEventListener('click', function(e) {
       e.preventDefault();
-      const homeLink = document.querySelector('.main-menu-link[href="/home"]');
+      // If this logo is inside the mobile menu, always go to the real index page
+      if (mobileMenu && mobileMenu.contains(this)) {
+        mobileMenu.classList.remove('is-open');
+        document.body.style.overflow = '';
+        window.location.href = '/';
+        return;
+      }
+
+      const homeLink = document.querySelector('.main-menu-link[href="/#"]') || document.querySelector('.main-menu-link[href="/"]');
       if (homeLink) {
         updateDesktopMenu(homeLink);
         homeLink.classList.add('active');
         if(!homeLink.textContent.includes('•')) homeLink.textContent = '• ' + homeLink.textContent;
       }
+      // Desktop logo should go to the real index
+      window.location.href = '/';
       // 【修改文字： console 輸出改為 Harry Liao 相關】
       console.log('Logo 點擊，準備切換回首頁:', this.getAttribute('href'));
     });
@@ -71,22 +101,59 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // 手機版選單切換
+  // 手機版選單切換（使用與桌面相同的 href 解析）
   mobileLinks.forEach(link => {
     link.addEventListener('click', function(e) {
       e.preventDefault();
-      
+
       mobileLinks.forEach(item => item.classList.remove('active'));
       this.classList.add('active');
-      // 【修改文字： console 輸出改為 Harry Liao 相關】
-      console.log('手機選單點擊，目標:', this.getAttribute('href'));
+      const href = this.getAttribute('href');
+      console.log('手機選單點擊，目標:', href);
 
-      // 點擊後延遲 0.4 秒自動關閉選單 (給無縫轉場一點時間)
+      // Normalize href -> page name from hash or path
+      let page = '';
+      if (href && href.indexOf('#') !== -1) {
+        page = href.split('#')[1] || '';
+      } else if (href === '/' || href === '/index.html') {
+        page = '';
+      } else if (href && href.startsWith('/')) {
+        page = href.replace(/^\/+/, '').replace(/\/+$/, '');
+      }
+
+      if (page === 'about' && window.openAbout) { window.openAbout(); mobileMenu.classList.remove('is-open'); document.body.style.overflow = ''; return; }
+      if (page === 'work' && window.openWork) { window.openWork(); mobileMenu.classList.remove('is-open'); document.body.style.overflow = ''; return; }
+      if (page === 'contact' && window.openContact) { window.openContact(); mobileMenu.classList.remove('is-open'); document.body.style.overflow = ''; return; }
+      // If mobile Home is clicked, always navigate to the real index page
+      if (page === '') { mobileMenu.classList.remove('is-open'); document.body.style.overflow = ''; window.location.href = '/'; return; }
+
+      // 預設延遲收起選單
       setTimeout(() => {
         mobileMenu.classList.remove('is-open');
         document.body.style.overflow = '';
       }, 400);
     });
   });
+
+  // 同步選單狀態（在載入或 hash 變更時保持點點在對應選單）
+  function syncMenuToHash() {
+    const hash = (location.hash || '').replace(/^#/, '');
+    const page = hash || '';
+
+    // desktop
+    const desktopSelector = page ? `.main-menu-link[href="/#${page}"]` : `.main-menu-link[href="/#"]`;
+    const desktopLink = document.querySelector(desktopSelector);
+    if (desktopLink) updateDesktopMenu(desktopLink);
+
+    // mobile
+    mobileLinks.forEach(item => item.classList.remove('active'));
+    const mobileSelector = page ? `.mobile-link[href="/#${page}"]` : `.mobile-link[href="/#"]`;
+    const mobileLink = document.querySelector(mobileSelector);
+    if (mobileLink) mobileLink.classList.add('active');
+  }
+
+  // run once and on hash changes
+  syncMenuToHash();
+  window.addEventListener('hashchange', syncMenuToHash);
 
 });
