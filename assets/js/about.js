@@ -18,6 +18,31 @@
   let currentPage = null;
   let closingViaHistory = false;
 
+  function bindSpaTargetLinks(scope) {
+    if (!scope) return;
+    const links = scope.querySelectorAll('a[data-spa-target]');
+    links.forEach((link) => {
+      if (link.dataset.spaBound === '1') return;
+      link.dataset.spaBound = '1';
+      link.addEventListener('click', (event) => {
+        const target = link.getAttribute('data-spa-target');
+        if (!target) return;
+        event.preventDefault();
+        if (target === 'about') {
+          loadPage('about', true);
+          return;
+        }
+        if (target === 'work') {
+          loadPage('work', true);
+          return;
+        }
+        if (target === 'contact') {
+          loadPage('contact', true);
+        }
+      });
+    });
+  }
+
   // Persist scroll position across full-page reloads so we can restore after replacing DOM
   window.addEventListener('beforeunload', () => {
     try {
@@ -32,6 +57,14 @@
     const token = Symbol(pageName);
     loadPage._token = token;
 
+    // Prevent FOUC on SPA-triggered About navigation.
+    if (pushState && pageName === 'about') {
+      try {
+        document.documentElement.classList.add('spa-loading');
+        document.body.classList.add('spa-loading');
+      } catch (e) {}
+    }
+
     return fetch(`${pageName}.html`, { cache: 'no-store' })
       .then(r => r.text())
       .then(html => {
@@ -45,6 +78,15 @@
         root.classList.remove('page-exit');
         root.classList.remove('page-enter');
         root.innerHTML = html;
+        bindSpaTargetLinks(root);
+
+        if (typeof window.initEmbeddedMediaFallback === 'function') {
+          window.initEmbeddedMediaFallback(root);
+        }
+
+        if (typeof window.initWorkMediaFallback === 'function') {
+          window.initWorkMediaFallback(root);
+        }
 
         document.body.classList.remove('spa-about', 'spa-work', 'spa-contact');
         document.body.classList.add(`spa-${pageName}`);
@@ -56,9 +98,14 @@
         }
         currentPage = pageName;
 
-        // Reveal page immediately when navigation originated from an SPA action
+        // Reveal page after the fragment has rendered.
         if (pushState) {
-          try { document.documentElement.classList.remove('spa-loading'); document.body.classList.remove('spa-loading'); } catch (e) {}
+          requestAnimationFrame(() => {
+            try {
+              document.documentElement.classList.remove('spa-loading');
+              document.body.classList.remove('spa-loading');
+            } catch (e) {}
+          });
         }
 
         if (pageName === 'contact') {
@@ -226,6 +273,8 @@
   window.addEventListener('hashchange', () => {
     const hash = (location.hash || '').replace(/^#/, '');
     if (hash === 'about' || hash === 'work' || hash === 'contact') {
+      // For direct hash-link navigation (e.g. "Click Here" CTAs), always land at top.
+      window.scrollTo({ top: 0, behavior: 'auto' });
       loadPage(hash, false).then(() => {
         // wait for media then poll height stability before restoring scroll and revealing
         const waitForMedia = (container, timeout = 800) => {
@@ -275,7 +324,11 @@
               if ((obj.hash || '') === (location.hash || '')) {
                 window.scrollTo({ top: obj.y });
                 sessionStorage.removeItem('spa-scroll');
+              } else {
+                window.scrollTo({ top: 0, behavior: 'auto' });
               }
+            } else {
+              window.scrollTo({ top: 0, behavior: 'auto' });
             }
           } catch (e) {}
           try { document.documentElement.classList.remove('spa-loading'); document.body.classList.remove('spa-loading'); } catch (e) {}
@@ -292,5 +345,7 @@
   } else {
     loadFromHash();
   }
+
+  bindSpaTargetLinks(document);
 
 })();

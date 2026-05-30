@@ -1,5 +1,76 @@
+function initWorkMediaFallback(scope = document) {
+  if (!scope) return;
+
+  const cards = scope.querySelectorAll('.work-featured-card, .work-card');
+  if (!cards.length) return;
+
+  cards.forEach((card) => {
+    if (card.dataset.mediaFallbackInit === '1') return;
+
+    const media = card.querySelector('iframe.work-video, video');
+    if (!media) return;
+
+    const fallbackSrc = media.getAttribute('data-fallback') || media.getAttribute('poster');
+    if (!fallbackSrc) return;
+
+    card.dataset.mediaFallbackInit = '1';
+    card.classList.add('media-pending');
+
+    const fallbackImage = document.createElement('img');
+    fallbackImage.className = 'work-media-fallback';
+    fallbackImage.src = fallbackSrc;
+    fallbackImage.alt = '';
+    fallbackImage.setAttribute('aria-hidden', 'true');
+    card.insertBefore(fallbackImage, media);
+
+    let settled = false;
+    const markReady = () => {
+      if (settled) return;
+      settled = true;
+      card.classList.remove('media-pending', 'media-failed');
+      card.classList.add('media-ready');
+    };
+
+    const markFailed = () => {
+      if (settled) return;
+      settled = true;
+      card.classList.remove('media-pending');
+      card.classList.add('media-failed');
+    };
+
+    const failTimer = setTimeout(markFailed, 7000);
+    const resolveReady = () => {
+      clearTimeout(failTimer);
+      markReady();
+    };
+    const resolveFailed = () => {
+      clearTimeout(failTimer);
+      markFailed();
+    };
+
+    if (media.tagName === 'IFRAME') {
+      media.addEventListener('load', resolveReady, { once: true });
+      media.addEventListener('error', resolveFailed, { once: true });
+      return;
+    }
+
+    if (media.readyState >= 2) {
+      resolveReady();
+      return;
+    }
+
+    media.addEventListener('loadeddata', resolveReady, { once: true });
+    media.addEventListener('loadedmetadata', resolveReady, { once: true });
+    media.addEventListener('error', resolveFailed, { once: true });
+  });
+}
+
+window.initWorkMediaFallback = initWorkMediaFallback;
+
 // FEATURES CAROUSEL
 document.addEventListener("DOMContentLoaded", function() {
+  initWorkMediaFallback(document);
+
   const track = document.getElementById('clientTrack');
   const prevBtn = document.getElementById('clientPrevBtn');
   const nextBtn = document.getElementById('clientNextBtn');
@@ -251,7 +322,7 @@ const portfolioItems = [
     edition: "/ ISBN 9798881411671",
     title: "DREAM REALITY",
     projectUrl: "https://www.behance.net/gallery/202521069/MFA-Thesis-Book-Slides-Dream-Reality",
-    image: "images/TB.jpg",
+    image: "images/TB.webp",
     description: "Every day, we experience two realities. The first is experienced when we are awake. The second is experienced when we are asleep, dreaming. Dreams are often viewed as experiences that are out of our control. For me, this is not the case. My thesis is an exploration into the unique realm of lucid dreaming, a state where the dreamer is aware they are dreaming. As a result of this awareness, the dreamer has the ability to influence their own dream narrative. ",
     dimensions: "156 x 235 mm",
     pages: "113 pages",
@@ -262,7 +333,7 @@ const portfolioItems = [
     edition: "/ arXiv:2506.08872",
     title: "YOUR BRAIN ON CHATGPT (MIT)", 
     projectUrl: "https://arxiv.org/abs/2506.08872",
-    image: "images/YB.jpg", 
+    image: "images/YB.webp", 
     description: "This study examines the neural and behavioral impact of LLM-assisted essay writing across LLM, Search Engine, and Brain-only groups. EEG and essay analysis showed the strongest brain connectivity in Brain-only participants and the weakest in LLM users, with lower ownership of writing in the LLM condition. The findings suggest that while LLMs improve convenience, long-term reliance may reduce cognitive engagement in learning.",
     dimensions: "LETTER SIZE",
     pages: "216 pages",

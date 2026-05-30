@@ -14,8 +14,10 @@
     <link type="image/x-icon" href="icon.ico" rel="shortcut icon">
     <link type="image/x-icon" href="icon.ico" rel="bookmark">
     <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="preload" as="image" href="images/TB.jpg">
-    <link rel="preload" as="image" href="images/YB.jpg">
+    <link rel="preload" as="style" href="assets/css/about.css">
+    <link rel="stylesheet" href="assets/css/about.css">
+    <link rel="preload" as="image" href="images/TB.webp">
+    <link rel="preload" as="image" href="images/YB.webp">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <script src="assets/js/navbar.js" defer></script>
     <script src="assets/js/about.js" defer></script>
@@ -93,10 +95,19 @@
 
 <div id="mainContent">
 <section class="hero-section">
-      <div class="video-container">
-        <video id="hero-video" autoplay loop muted playsinline>
-            <source src="videos/Gate Music Festival.mp4" type="video/mp4">
-        </video>
+      <div class="video-container media-fallback-host">
+        <iframe
+          id="hero-video"
+          class="hero-video"
+          data-fallback="images/Work/Gate.webp"
+          src="https://player.vimeo.com/video/1148825814?background=1&autopause=0&muted=1&loop=1"
+          title="Gate Music Festival"
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen
+          tabindex="-1"
+          aria-hidden="true"
+        ></iframe>
         <div class="video-overlay"></div>
       </div>
 
@@ -114,10 +125,18 @@
   </div>
 </div>
 
-<div class="parallax-group">
-  <video autoplay muted loop playsinline class="parallax-video">
-    <source src="videos/Gate Travel.mp4" type="video/mp4">
-  </video>
+<div class="parallax-group media-fallback-host">
+  <iframe
+    class="parallax-video"
+    data-fallback="images/Gate.webp"
+    src="https://player.vimeo.com/video/1148825751?background=1&autopause=0&muted=1&loop=1"
+    title="Gate Travel"
+    frameborder="0"
+    allow="autoplay; fullscreen; picture-in-picture"
+    allowfullscreen
+    tabindex="-1"
+    aria-hidden="true"
+  ></iframe>
     <div class="absolute-content project-info">
     <h2 class="project-title">GATE</h2>
     <p class="project-desc">GATE TRAVEL IS A NEW GATE PRODUCT LAUNCHED IN 2025, BUILT FOR FAST, SEAMLESS BOOKINGS WITH A CRYPTO-FIRST PAYMENT EXPERIENCE.</p>
@@ -125,10 +144,18 @@
   </div>
 </div>
 
-<div class="parallax-group">
-  <video autoplay muted loop playsinline class="parallax-video">
-    <source src="videos/Cocooks-demo.mp4" type="video/mp4">
-  </video>
+<div class="parallax-group media-fallback-host">
+  <iframe
+    class="parallax-video"
+    data-fallback="images/Work/Cocook App Design.webp"
+    src="https://player.vimeo.com/video/1046065324?background=1&autopause=0&muted=1&loop=1"
+    title="Cocooks Demo"
+    frameborder="0"
+    allow="autoplay; fullscreen; picture-in-picture"
+    allowfullscreen
+    tabindex="-1"
+    aria-hidden="true"
+  ></iframe>
     <div class="absolute-content project-info">
     <h2 class="project-title">COCOOK</h2>
     <p class="project-desc">COCOOK IS A MOBILE APP THAT HELPS YOUNG ADULTS BUILD HEALTHIER EATING HABITS THROUGH ACCESSIBLE NUTRITION EDUCATION, RECIPES WITH FACTS, STEP-BY-STEP GUIDANCE, AND SHAREABLE COOKING SPACES.</p>
@@ -136,10 +163,18 @@
   </div>
 </div>
 
-<div class="parallax-group">
-  <video autoplay muted loop playsinline class="parallax-video">
-    <source src="videos/Reno_Gordon_For-U_S.mp4" type="video/mp4">
-  </video>
+<div class="parallax-group media-fallback-host">
+  <iframe
+    class="parallax-video"
+    data-fallback="images/Work/For-U_cover.webp"
+    src="https://player.vimeo.com/video/1196844957?background=1&autopause=0&muted=1&loop=1"
+    title="Reno Gordon For-U"
+    frameborder="0"
+    allow="autoplay; fullscreen; picture-in-picture"
+    allowfullscreen
+    tabindex="-1"
+    aria-hidden="true"
+  ></iframe>
     <div class="absolute-content project-info">
     <h2 class="project-title">FOR-U</h2>
     <p class="project-desc">FOR-U is a house single created by Harry Liao in collaboration with rising singer Luna. The story explores a young girl's inner world and aims to deliver an energetic listening experience.</p>
@@ -579,7 +614,7 @@
       </button>
 
       <div class="image-container">
-        <img id="artwork-img" src="images/TB.jpg" alt="Portfolio artwork" decoding="async" fetchpriority="high">
+        <img id="artwork-img" src="images/TB.webp" alt="Portfolio artwork" decoding="async" fetchpriority="high">
       </div>
 
       <button id="portfolioNextBtn" class="nav-btn" aria-label="Next portfolio item">
@@ -633,38 +668,38 @@
         <div class="swiper-wrapper">
             <div class="swiper-slide">
                 <div class="slide-content">
-                    <img src="images/events/03.jpg" alt="Showcase 03">
+                    <img src="images/events/03.webp" alt="Showcase 03">
                     <div class="slide-info"><span class="credit-text">CREDIT TO: Harry Liao</span></div>
                 </div>
             </div>
             <div class="swiper-slide">
                 <div class="slide-content">
-                    <img src="images/events/05.jpg" alt="Showcase 01">
+                    <img src="images/events/05.webp" alt="Showcase 01">
                     <div class="slide-info"><span class="credit-text">CREDIT TO: Harry Liao</span></div>
                 </div>
             </div>
             <div class="swiper-slide">
                 <div class="slide-content">
-                    <img src="images/events/02.jpg" alt="Showcase 02">
+                    <img src="images/events/02.webp" alt="Showcase 02">
                     <div class="slide-info"><span class="credit-text">CREDIT TO: Harry Liao</span></div>
                 </div>
             </div>
 
             <div class="swiper-slide">
                 <div class="slide-content">
-                    <img src="images/events/04.jpg" alt="Showcase 03">
+                    <img src="images/events/04.webp" alt="Showcase 03">
                     <div class="slide-info"><span class="credit-text">CREDIT TO: Harry Liao</span></div>
                 </div>
             </div>
             <div class="swiper-slide">
                 <div class="slide-content">
-                    <img src="images/events/06.jpg" alt="Showcase 01">
+                    <img src="images/events/06.webp" alt="Showcase 01">
                     <div class="slide-info"><span class="credit-text">CREDIT TO: Harry Liao</span></div>
                 </div>
             </div>
             <div class="swiper-slide">
                 <div class="slide-content">
-                    <img src="images/events/01.jpg" alt="Showcase 02">
+                    <img src="images/events/01.webp" alt="Showcase 02">
                     <div class="slide-info"><span class="credit-text">CREDIT TO: Harry Liao</span></div>
                 </div>
             </div>
@@ -688,7 +723,7 @@
 <section class="learn-more-section">
   <div class="learn-more-inner">
     <h2 class="learn-more-title">Learn More About Harry.</h2>
-    <a href="https://www.behance.net/xianhaoliao-design" target="_blank" rel="noopener noreferrer" class="learn-more-btn">
+    <a href="/#about" class="learn-more-btn">
       <span>Click Here</span>
       <span class="btn-arrow" aria-hidden="true">&rarr;</span>
     </a>
@@ -699,10 +734,10 @@
     <div class="tech-divider top-divider"></div>
 
     <div class="image-strip">
-        <div class="strip-item"><img src="images/events/02.jpg" alt="Work 1"></div>
-        <div class="strip-item"><img src="images/events/06.jpg" alt="Work 2"></div>
-        <div class="strip-item"><img src="images/events/01.jpg" alt="Work 3"></div>
-        <div class="strip-item"><img src="images/events/03.jpg" alt="Work 4"></div>
+        <div class="strip-item"><img src="images/events/02.webp" alt="Work 1"></div>
+        <div class="strip-item"><img src="images/events/06.webp" alt="Work 2"></div>
+        <div class="strip-item"><img src="images/events/01.webp" alt="Work 3"></div>
+        <div class="strip-item"><img src="images/events/03.webp" alt="Work 4"></div>
     </div>
 </section>
 

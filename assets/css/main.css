@@ -59,16 +59,48 @@ body {
 }
 
 .video-container { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
-.video-container video {
+.video-container video,
+.video-container iframe {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 50%;
+  left: 50%;
+  width: max(177.78vh, 100vw);
+  height: max(56.25vw, 100vh);
+  object-fit: cover;
+  object-position: center center;
+  transform: translate(-50%, -50%) scale(1.08);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.media-fallback-host {
+  position: relative;
+  overflow: hidden;
+}
+
+.embedded-media-fallback {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center center;
-  transform: scale(1.08);
-  will-change: transform;
+  z-index: 0;
+  opacity: 1;
+  transition: opacity 220ms ease;
+}
+
+.media-fallback-host iframe,
+.media-fallback-host video {
+  z-index: 1;
+}
+
+.media-fallback-host.media-ready .embedded-media-fallback {
+  opacity: 0;
+}
+
+.media-fallback-host.media-failed iframe,
+.media-fallback-host.media-failed video {
+  opacity: 0;
 }
 .video-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 2; }
 
@@ -312,14 +344,16 @@ html.spa-loading .site-footer {
 /* 影片設定，預留上下緩衝空間 */
 .parallax-video {
   position: absolute;
-  top: -15vh; /* 往上提，給 JS 空間往下推 */
+  top: -15vh;
   left: 0;
   width: 100%;
-  height: 130vh; /* 比觀景窗高 30%，確保滑動不穿幫 */
+  height: 130vh;
   object-fit: cover;
   filter: brightness(0.6);
   z-index: 1;
   will-change: transform;
+  pointer-events: none;
+  transform: translateY(0px);
 }
 
 /* ===== 疊加內容層 ===== */
@@ -1085,8 +1119,11 @@ body {
 
   .parallax-video {
     top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
     object-position: center center;
+    transform: translateY(0);
   }
 
   .hero-title {
@@ -1414,7 +1451,7 @@ body {
   --parallax-y: 50%;
   
   /* 放入你提供的圖片網址 */
-  background-image: linear-gradient(to bottom, rgba(5, 5, 5, 0.28) 0%, rgba(5, 5, 5, 0.62) 55%, rgba(5, 5, 5, 0.98) 100%), url('../../images/events/01.jpg');
+  background-image: linear-gradient(to bottom, rgba(5, 5, 5, 0.28) 0%, rgba(5, 5, 5, 0.62) 55%, rgba(5, 5, 5, 0.98) 100%), url('../../images/events/01.webp');
   background-size: var(--parallax-zoom);
   background-position: center var(--parallax-y);
   
@@ -2106,7 +2143,7 @@ body {
       min-height: 100svh;
       --parallax-zoom: cover;
       --parallax-y: 50%;
-      background-image: url('../../images/events/01.jpg');
+      background-image: url('../../images/events/01.webp');
       background-size: cover !important;
       background-position: center center !important;
       background-repeat: no-repeat;

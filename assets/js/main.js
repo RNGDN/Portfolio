@@ -1,4 +1,75 @@
+function initEmbeddedMediaFallback(scope = document) {
+  if (!scope) return;
+
+  const hosts = scope.querySelectorAll('.media-fallback-host');
+  if (!hosts.length) return;
+
+  hosts.forEach((host) => {
+    if (host.dataset.embeddedFallbackInit === '1') return;
+
+    const media = host.querySelector('iframe, video');
+    if (!media) return;
+
+    const fallbackSrc = media.getAttribute('data-fallback') || media.getAttribute('poster');
+    if (!fallbackSrc) return;
+
+    host.dataset.embeddedFallbackInit = '1';
+    host.classList.add('media-pending');
+
+    const fallbackImage = document.createElement('img');
+    fallbackImage.className = 'embedded-media-fallback';
+    fallbackImage.src = fallbackSrc;
+    fallbackImage.alt = '';
+    fallbackImage.setAttribute('aria-hidden', 'true');
+    host.insertBefore(fallbackImage, media);
+
+    let settled = false;
+    const markReady = () => {
+      if (settled) return;
+      settled = true;
+      host.classList.remove('media-pending', 'media-failed');
+      host.classList.add('media-ready');
+    };
+
+    const markFailed = () => {
+      if (settled) return;
+      settled = true;
+      host.classList.remove('media-pending');
+      host.classList.add('media-failed');
+    };
+
+    const failTimer = setTimeout(markFailed, 7000);
+    const resolveReady = () => {
+      clearTimeout(failTimer);
+      markReady();
+    };
+    const resolveFailed = () => {
+      clearTimeout(failTimer);
+      markFailed();
+    };
+
+    if (media.tagName === 'IFRAME') {
+      media.addEventListener('load', resolveReady, { once: true });
+      media.addEventListener('error', resolveFailed, { once: true });
+      return;
+    }
+
+    if (media.readyState >= 2) {
+      resolveReady();
+      return;
+    }
+
+    media.addEventListener('loadeddata', resolveReady, { once: true });
+    media.addEventListener('loadedmetadata', resolveReady, { once: true });
+    media.addEventListener('error', resolveFailed, { once: true });
+  });
+}
+
+window.initEmbeddedMediaFallback = initEmbeddedMediaFallback;
+
 document.addEventListener('DOMContentLoaded', () => {
+  initEmbeddedMediaFallback(document);
+
   const videos = document.querySelectorAll('video');
   videos.forEach(video => {
     video.muted = true;
@@ -15,7 +86,11 @@ function updateParallax() {
   if (isMobileViewport() || prefersReducedMotion) {
     const heroVideo = document.getElementById('hero-video');
     if (heroVideo) {
-      heroVideo.style.transform = 'translateY(0px) scale(1.05)';
+      if (heroVideo.tagName === 'IFRAME') {
+        heroVideo.style.transform = 'translate(-50%, -50%) scale(1.05)';
+      } else {
+        heroVideo.style.transform = 'translateY(0px) scale(1.05)';
+      }
     }
 
     const blackPanelSections = document.querySelectorAll('.featured-clients-section, .career-section, .impact-section');
@@ -48,7 +123,11 @@ function updateParallax() {
     const freezeStrength = 0.92;
     const maxOffset = heroSection.offsetHeight * 0.55;
     const heroOffset = Math.min(Math.max((-heroRect.top) * freezeStrength, 0), maxOffset);
-    heroVideo.style.transform = `translateY(${heroOffset}px) scale(1.12)`;
+    if (heroVideo.tagName === 'IFRAME') {
+      heroVideo.style.transform = `translate(-50%, calc(-50% + ${heroOffset}px)) scale(1.12)`;
+    } else {
+      heroVideo.style.transform = `translateY(${heroOffset}px) scale(1.12)`;
+    }
   }
 
   // 2. 影片的相對視差位移

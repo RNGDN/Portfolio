@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // --- 1. 背景影片播放防護 ---
   const heroVideo = document.getElementById('hero-video');
-  if (heroVideo) {
+  if (heroVideo && typeof heroVideo.play === 'function') {
     let playPromise = heroVideo.play();
     if (playPromise !== undefined) {
       playPromise.catch(error => console.warn("影片自動播放被阻擋:", error));
