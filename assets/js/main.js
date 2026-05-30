@@ -73,9 +73,41 @@ document.addEventListener('DOMContentLoaded', () => {
   const videos = document.querySelectorAll('video');
   videos.forEach(video => {
     video.muted = true;
+    video.loop = true;
+    video.setAttribute('loop', '');
     video.play().catch(e => console.warn("影片播放受限:", e));
   });
+
+  // init lazy iframes on document load
+  if (typeof window.initLazyIframes === 'function') {
+    window.initLazyIframes(document);
+  }
 });
+
+// Expose function to lazy-load iframes within a scope (useful for SPA-inserted content)
+function initLazyIframes(scope = document) {
+  try {
+    const lazyIframes = Array.from((scope || document).querySelectorAll('iframe[data-src]'));
+    if (lazyIframes.length === 0) return;
+
+    const onIntersect = (entries, obs) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const iframe = entry.target;
+        const src = iframe.getAttribute('data-src');
+        if (src) {
+          iframe.setAttribute('src', src);
+        }
+        obs.unobserve(iframe);
+      });
+    };
+
+    const io = new IntersectionObserver(onIntersect, { root: null, rootMargin: '200px 0px', threshold: 0.01 });
+    lazyIframes.forEach(ifr => io.observe(ifr));
+  } catch (e) { console.error('initLazyIframes error', e); }
+}
+
+window.initLazyIframes = initLazyIframes;
 
 let ticking = false;
 const isMobileViewport = () => window.matchMedia('(max-width: 900px)').matches;
@@ -85,12 +117,9 @@ function updateParallax() {
   // 手機與使用者偏好減少動態時，停用重視差以換取流暢度。
   if (isMobileViewport() || prefersReducedMotion) {
     const heroVideo = document.getElementById('hero-video');
-    if (heroVideo) {
-      if (heroVideo.tagName === 'IFRAME') {
-        heroVideo.style.transform = 'translate(-50%, -50%) scale(1.05)';
-      } else {
-        heroVideo.style.transform = 'translateY(0px) scale(1.05)';
-      }
+      if (heroVideo) {
+      // Remove extra scaling on reduced-motion/mobile. Keep the media centered.
+      heroVideo.style.transform = 'translate(-50%, -50%)';
     }
 
     const blackPanelSections = document.querySelectorAll('.featured-clients-section, .career-section, .impact-section');
@@ -109,7 +138,7 @@ function updateParallax() {
 
     const groups = document.querySelectorAll('.parallax-group .parallax-video');
     groups.forEach(video => {
-      video.style.transform = 'translateY(0px)';
+      video.style.transform = 'translate(-50%, -50%)';
     });
     ticking = false;
     return;
@@ -126,7 +155,7 @@ function updateParallax() {
     if (heroVideo.tagName === 'IFRAME') {
       heroVideo.style.transform = `translate(-50%, calc(-50% + ${heroOffset}px)) scale(1.12)`;
     } else {
-      heroVideo.style.transform = `translateY(${heroOffset}px) scale(1.12)`;
+      heroVideo.style.transform = `translate(-50%, calc(-50% + ${heroOffset}px)) scale(1.12)`;
     }
   }
 
@@ -141,7 +170,7 @@ function updateParallax() {
       // 出現在視窗內才運算，節省效能
       if (rect.top <= window.innerHeight && rect.bottom >= 0) {
         const yPos = rect.top * -0.3; // 控制視差強度 (-0.3)
-        video.style.transform = `translateY(${yPos}px)`;
+        video.style.transform = `translate(-50%, calc(-50% + ${yPos}px))`;
       }
     }
   });

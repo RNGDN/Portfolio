@@ -64,11 +64,15 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: max(177.78vh, 100vw);
-  height: max(56.25vw, 100vh);
+  transform: translate(-50%, -50%) scale(1.08);
+  /* Use a simpler, more robust sizing strategy so the media stays centered
+     while still covering the container. */
+  width: auto;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
   object-fit: cover;
   object-position: center center;
-  transform: translate(-50%, -50%) scale(1.08);
   will-change: transform;
   pointer-events: none;
 }
@@ -372,6 +376,8 @@ html.spa-loading .site-footer {
   height: max(56.25vw, 100vh);
   transform: translate(-50%, -50%) scale(1.08);
   object-fit: cover;
+  object-position: center center;
+  -webkit-object-position: center center;
   pointer-events: none;
   filter: brightness(0.6);
   z-index: 1;
@@ -427,6 +433,31 @@ html.spa-loading .site-footer {
 .project-info {
   justify-content: flex-end;
   padding: 0 5% 10vh 5%;
+}
+
+/* 手機版：將覆蓋資訊固定在畫面下方，確保不會跑到上面 */
+@media (max-width: 900px) {
+  .absolute-content.project-info {
+    position: absolute;
+    top: auto;
+    bottom: 6vh; /* 距離底部 6vh */
+    left: 0;
+    width: 100%;
+    height: auto;
+    padding: 0 6% 0 6%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start; /* 內容貼齊左側 */
+    z-index: 5;
+    pointer-events: auto;
+  }
+  .absolute-content.project-info .project-title,
+  .absolute-content.project-info .project-desc,
+  .absolute-content.project-info .view-project {
+    max-width: 92%;
+    text-align: left;
+  }
 }
 
 /* 字體排版 */
@@ -788,6 +819,14 @@ html.spa-loading .site-footer {
 
 .client-item.is-active::after {
   border-color: transparent;
+}
+
+/* 微幅將簡易媒體／底部專案影片調暗，讓上方文字更清晰 */
+.simple-media video,
+.work-page video,
+.work-card video,
+.work-featured video {
+  filter: brightness(0.72) saturate(0.98);
 }
 
 /* 底部控制按鈕 */

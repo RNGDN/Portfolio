@@ -83,6 +83,9 @@
         if (typeof window.initEmbeddedMediaFallback === 'function') {
           window.initEmbeddedMediaFallback(root);
         }
+        if (typeof window.initLazyIframes === 'function') {
+          window.initLazyIframes(root);
+        }
 
         if (typeof window.initWorkMediaFallback === 'function') {
           window.initWorkMediaFallback(root);
