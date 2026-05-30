@@ -356,6 +356,56 @@ html.spa-loading .site-footer {
   transform: translateY(0px);
 }
 
+/* Simple non-parallax media block (used for mobile/desktop when no parallax desired) */
+.simple-media {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+.simple-media .simple-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(177.78vh, 100vw);
+  height: max(56.25vw, 100vh);
+  transform: translate(-50%, -50%) scale(1.08);
+  object-fit: cover;
+  pointer-events: none;
+  filter: brightness(0.6);
+  z-index: 1;
+}
+
+/* Mobile: force parallax iframes/videos to fill the area and allow deformation */
+@media screen and (max-width: 768px) {
+  .parallax-group { height: 100svh; overflow: hidden; }
+
+  /* Make the iframe/video fill the viewport area (ignore original aspect ratio) */
+  .parallax-video,
+  .parallax-group iframe,
+  .parallax-group video {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: max(177.78vh, 100vw) !important;
+    height: max(56.25vw, 100vh) !important;
+    object-fit: cover !important;
+    transform: translate(-50%, -50%) scale(1.08) !important;
+    transform-origin: center center !important;
+    -webkit-transform-origin: center center !important;
+    pointer-events: none !important;
+  }
+
+  /* If you want to intentionally deform (non-uniform scale), add the class `force-deform` to the iframe element */
+  /* Disable extra non-uniform deformation on mobile so appearance matches desktop */
+  .parallax-video.force-deform,
+  .parallax-group iframe.force-deform,
+  .parallax-group video.force-deform {
+    transform: translate(-50%, -50%) scale(1.08) !important;
+  }
+}
+
 /* ===== 疊加內容層 ===== */
 .absolute-content {
   position: absolute;

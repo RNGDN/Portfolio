@@ -16,6 +16,10 @@
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="preload" as="style" href="assets/css/about.css">
     <link rel="stylesheet" href="assets/css/about.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://player.vimeo.com" crossorigin>
     <link rel="preload" as="image" href="images/TB.webp">
     <link rel="preload" as="image" href="images/YB.webp">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
@@ -60,12 +64,12 @@
         <a href="https://www.instagram.com/xianhaoliao.design/" target="_blank" rel="noopener noreferrer" class="social-link">IG</a>
       </div>
 
-      <button class="mobile-menu-toggle" id="openMenuBtn">☰</button>
+      <button class="mobile-menu-toggle" id="openMenuBtn" aria-label="Open menu">☰</button>
     </nav>
     <div class="mobile-menu-overlay" id="mobileMenu">
       <div class="menu-header">
         <a href="/#" class="logo-link">HARRY LIAO</a>
-        <button class="close-btn" id="closeMenuBtn">♦ CLOSE ♦</button>
+        <button class="close-btn" id="closeMenuBtn" aria-label="Close menu">♦ CLOSE ♦</button>
       </div>
 
       <div class="menu-divider"></div>
@@ -125,11 +129,12 @@
   </div>
 </div>
 
-<div class="parallax-group media-fallback-host">
+<div class="simple-media media-fallback-host">
   <iframe
-    class="parallax-video"
+    class="simple-video"
     data-fallback="images/Gate.webp"
     src="https://player.vimeo.com/video/1148825751?background=1&autopause=0&muted=1&loop=1"
+    loading="lazy"
     title="Gate Travel"
     frameborder="0"
     allow="autoplay; fullscreen; picture-in-picture"
@@ -137,18 +142,19 @@
     tabindex="-1"
     aria-hidden="true"
   ></iframe>
-    <div class="absolute-content project-info">
+  <div class="absolute-content project-info">
     <h2 class="project-title">GATE</h2>
     <p class="project-desc">GATE TRAVEL IS A NEW GATE PRODUCT LAUNCHED IN 2025, BUILT FOR FAST, SEAMLESS BOOKINGS WITH A CRYPTO-FIRST PAYMENT EXPERIENCE.</p>
     <a href="https://www.behance.net/gallery/240939305/Gatecom-Motion-Graphics" target="_blank" rel="noopener noreferrer" class="view-project">VIEW PROJECT</a>
   </div>
 </div>
 
-<div class="parallax-group media-fallback-host">
+<div class="simple-media media-fallback-host">
   <iframe
-    class="parallax-video"
+    class="simple-video"
     data-fallback="images/Work/Cocook App Design.webp"
     src="https://player.vimeo.com/video/1046065324?background=1&autopause=0&muted=1&loop=1"
+    loading="lazy"
     title="Cocooks Demo"
     frameborder="0"
     allow="autoplay; fullscreen; picture-in-picture"
@@ -156,18 +162,19 @@
     tabindex="-1"
     aria-hidden="true"
   ></iframe>
-    <div class="absolute-content project-info">
+  <div class="absolute-content project-info">
     <h2 class="project-title">COCOOK</h2>
     <p class="project-desc">COCOOK IS A MOBILE APP THAT HELPS YOUNG ADULTS BUILD HEALTHIER EATING HABITS THROUGH ACCESSIBLE NUTRITION EDUCATION, RECIPES WITH FACTS, STEP-BY-STEP GUIDANCE, AND SHAREABLE COOKING SPACES.</p>
     <a href="https://www.behance.net/gallery/200280613/Cocook-App-Design" target="_blank" rel="noopener noreferrer" class="view-project">VIEW PROJECT</a>
   </div>
 </div>
 
-<div class="parallax-group media-fallback-host">
+<div class="simple-media media-fallback-host">
   <iframe
-    class="parallax-video"
+    class="simple-video"
     data-fallback="images/Work/For-U_cover.webp"
     src="https://player.vimeo.com/video/1196844957?background=1&autopause=0&muted=1&loop=1"
+    loading="lazy"
     title="Reno Gordon For-U"
     frameborder="0"
     allow="autoplay; fullscreen; picture-in-picture"
@@ -175,7 +182,7 @@
     tabindex="-1"
     aria-hidden="true"
   ></iframe>
-    <div class="absolute-content project-info">
+  <div class="absolute-content project-info">
     <h2 class="project-title">FOR-U</h2>
     <p class="project-desc">FOR-U is a house single created by Harry Liao in collaboration with rising singer Luna. The story explores a young girl's inner world and aims to deliver an energetic listening experience.</p>
     <a href="https://www.behance.net/gallery/80108693/Reno-Gordon-For-U-MV" target="_blank" rel="noopener noreferrer" class="view-project">VIEW PROJECT</a>
@@ -668,38 +675,38 @@
         <div class="swiper-wrapper">
             <div class="swiper-slide">
                 <div class="slide-content">
-                    <img src="images/events/03.webp" alt="Showcase 03">
+                    <img src="images/events/03.webp" alt="Showcase 03" loading="lazy" decoding="async">
                     <div class="slide-info"><span class="credit-text">CREDIT TO: Harry Liao</span></div>
                 </div>
             </div>
             <div class="swiper-slide">
                 <div class="slide-content">
-                    <img src="images/events/05.webp" alt="Showcase 01">
+                    <img src="images/events/05.webp" alt="Showcase 01" loading="lazy" decoding="async">
                     <div class="slide-info"><span class="credit-text">CREDIT TO: Harry Liao</span></div>
                 </div>
             </div>
             <div class="swiper-slide">
                 <div class="slide-content">
-                    <img src="images/events/02.webp" alt="Showcase 02">
+                    <img src="images/events/02.webp" alt="Showcase 02" loading="lazy" decoding="async">
                     <div class="slide-info"><span class="credit-text">CREDIT TO: Harry Liao</span></div>
                 </div>
             </div>
 
             <div class="swiper-slide">
                 <div class="slide-content">
-                    <img src="images/events/04.webp" alt="Showcase 03">
+                    <img src="images/events/04.webp" alt="Showcase 03" loading="lazy" decoding="async">
                     <div class="slide-info"><span class="credit-text">CREDIT TO: Harry Liao</span></div>
                 </div>
             </div>
             <div class="swiper-slide">
                 <div class="slide-content">
-                    <img src="images/events/06.webp" alt="Showcase 01">
+                    <img src="images/events/06.webp" alt="Showcase 01" loading="lazy" decoding="async">
                     <div class="slide-info"><span class="credit-text">CREDIT TO: Harry Liao</span></div>
                 </div>
             </div>
             <div class="swiper-slide">
                 <div class="slide-content">
-                    <img src="images/events/01.webp" alt="Showcase 02">
+                    <img src="images/events/01.webp" alt="Showcase 02" loading="lazy" decoding="async">
                     <div class="slide-info"><span class="credit-text">CREDIT TO: Harry Liao</span></div>
                 </div>
             </div>
@@ -734,10 +741,10 @@
     <div class="tech-divider top-divider"></div>
 
     <div class="image-strip">
-        <div class="strip-item"><img src="images/events/02.webp" alt="Work 1"></div>
-        <div class="strip-item"><img src="images/events/06.webp" alt="Work 2"></div>
-        <div class="strip-item"><img src="images/events/01.webp" alt="Work 3"></div>
-        <div class="strip-item"><img src="images/events/03.webp" alt="Work 4"></div>
+        <div class="strip-item"><img src="images/events/02.webp" alt="Work 1" loading="lazy" decoding="async"></div>
+        <div class="strip-item"><img src="images/events/06.webp" alt="Work 2" loading="lazy" decoding="async"></div>
+        <div class="strip-item"><img src="images/events/01.webp" alt="Work 3" loading="lazy" decoding="async"></div>
+        <div class="strip-item"><img src="images/events/03.webp" alt="Work 4" loading="lazy" decoding="async"></div>
     </div>
 </section>
 
