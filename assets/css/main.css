@@ -2042,6 +2042,7 @@ body {
   text-transform: uppercase;
   transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
   box-sizing: border-box;
+  max-width: 100%;
 }
 
 .learn-more-btn:hover {
@@ -2227,7 +2228,7 @@ body {
   }
 
   .learn-more-btn {
-    width: min(92vw, 320px);
+    width: min(100%, 320px);
     min-width: 0;
     border-radius: 0;
   }
