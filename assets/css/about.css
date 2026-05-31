@@ -99,16 +99,32 @@
 .moment-card h4 { margin: 0 0 6px 0; font-size: 16px; color: #fff; }
 .moment-card p { margin: 0; color: #cfcfcf; font-size: 14px; }
 
-.thesis-cta .thesis-card { display: flex; gap: 22px; align-items: center; background: #0f0f10; padding: 36px; border-radius: 18px; box-shadow: 0 12px 36px rgba(0,0,0,0.25); margin: 30px 0; }
+.thesis-cta .thesis-card { display: flex; gap: 48px; align-items: center; background: #0f0f10; padding: 36px; border-radius: 18px; box-shadow: 0 12px 36px rgba(0,0,0,0.25); margin: 30px 0; }
 .thesis-text h3 { margin: 0 0 12px 0; font-size: 22px; color: #fff; font-family: 'League Spartan', sans-serif; }
 .thesis-text p { margin: 0 0 12px 0; color: #cfcfcf; font-family: 'Space Mono', monospace; }
-.thesis-image img { width: 320px; max-width: 100%; height: auto; border-radius: 12px; display: block; }
+.thesis-image { flex: 0 0 48%; }
+.thesis-image img { width: 100%; height: 320px; object-fit: cover; border-radius: 12px; display: block; }
+
+/* Ensure thesis image stays right-aligned regardless of text length */
+.thesis-text { flex: 1 1 48%; }
+.thesis-image { margin-left: auto; }
 
 .projects-invite { margin: 30px 0; }
-.invite-inner { display: flex; gap: 20px; align-items: center; justify-content: space-between; background: #0f0f10; padding: 24px; border-radius: 16px; }
-.invite-media img { width: 420px; max-width: 100%; height: auto; border-radius: 12px; opacity: 0.95; }
+.invite-inner { display: flex; gap: 48px; align-items: center; justify-content: space-between; background: #0f0f10; padding: 28px; border-radius: 16px; }
+.invite-media { flex: 0 0 48%; }
+.invite-media img { width: 100%; height: 320px; object-fit: cover; border-radius: 12px; opacity: 0.95; display: block; }
+.invite-cta { flex: 1 1 48%; }
 .invite-cta h3 { margin: 0 0 12px 0; font-size: 22px; color: #fff; font-family: 'League Spartan', sans-serif; }
 .invite-cta p { margin: 0 0 12px 0; color: #cfcfcf; font-family: 'Space Mono', monospace; }
+
+/* Make the "View PDF" button narrower (less horizontal width) */
+.invite-cta .btn {
+  display: inline-block;
+  padding: 12px 18px;
+  max-width: 240px;
+  width: auto;
+  box-sizing: border-box;
+}
 
 .about-back-wrap { text-align: center; margin-top: 10px; }
 .about-back-wrap { margin-top: 36px; }
@@ -176,6 +192,10 @@
   .about-container > header::after,
   .about-container > section::after,
   .about-back-wrap::after { right: calc(50% - 50vw + 18px); left: auto; }
+
+  /* Desktop: make the three moment cards expand to fill the container and align with other gray blocks */
+  .moments-row { justify-content: space-between; }
+  .moment-card { flex: 0 0 calc((100% - 44px) / 3); width: calc((100% - 44px) / 3); max-width: none; }
 }
 
 @media (max-width: 1000px) {
@@ -187,10 +207,21 @@
   .moment-card { width: min(86%, 420px); }
   .thesis-cta .thesis-card { flex-direction: column-reverse; align-items: stretch; }
   .thesis-image img { width: 100%; }
-  .invite-inner { flex-direction: column; align-items: stretch; padding: 36px; }
+  /* Mobile: reset thesis image positioning so it centers and matches invite-media width */
+  .thesis-image { margin: 0 auto; flex: none; width: 100%; }
+  .thesis-image img { height: auto; }
+  /* reduce horizontal padding to remove large right gap inside the card */
+  .invite-inner { flex-direction: column; align-items: stretch; padding: 20px 12px; }
   .invite-media { width: 100%; }
-  .invite-media img { width: 100%; }
-  .invite-cta .btn { width: min(100%, 320px); }
+  .invite-media img { width: 100%; height: auto; }
+    /* avoid forcing a percentage-derived width which can create unexpected gaps;
+      use auto width with a max cap so the button only takes needed space */
+    .invite-cta .btn { width: auto; max-width: 240px; }
+
+  /* Left-align the invite CTA and button on mobile (user preference) */
+  /* do not let invite-cta stretch unnecessarily; keep content left-aligned */
+  .invite-cta { display: block; text-align: left; width: auto; max-width: none; }
+  .invite-cta .btn { display: inline-block; margin: 12px 0 0 0; max-width: 240px; }
   .about-container { padding: calc(56px + env(safe-area-inset-top)) 20px 28px; }
   /* on small screens, keep lines within small viewport padding */
   .about-container > header::before,
@@ -253,3 +284,58 @@
 /* Remove the final bottom separator above the footer */
 .about-back-wrap::before { display: none !important; }
 .about-back-wrap::after { display: none !important; }
+
+/* Ensure dark/gray "card" sections have consistent width on small screens */
+@media (max-width: 1000px) {
+  .moment-card,
+  .thesis-cta .thesis-card,
+  .invite-inner,
+  .projects-invite .invite-inner,
+  .learn-more-inner,
+  .skill-block {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  /* Make the learn-more CTA match the other card styles */
+  .learn-more-inner {
+    background: #0f0f10;
+    padding: 24px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    /* expand to the container edges (about-container has 20px padding on mobile) */
+    width: calc(100% + 40px);
+    margin-left: -20px;
+    margin-right: -20px;
+    box-sizing: border-box;
+  }
+
+  /* Reduce heavy paddings slightly to keep consistent visual rhythm */
+  .thesis-cta .thesis-card,
+  .invite-inner {
+    padding: 20px;
+  }
+
+  .learn-more-title { text-align: center; margin: 0 0 6px 0; }
+  .learn-more-btn { display: inline-flex; width: min(100%, 320px); }
+}
+
+/* Remove the gray box for the "View My Online Work" section on all viewports */
+.learn-more-inner {
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  width: auto !important;
+  margin: 0 auto !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}

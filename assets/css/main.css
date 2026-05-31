@@ -1709,7 +1709,7 @@ body {
   --parallax-y: 50%;
   
   /* 放入你提供的圖片網址 */
-  background-image: linear-gradient(to bottom, rgba(5, 5, 5, 0.28) 0%, rgba(5, 5, 5, 0.62) 55%, rgba(5, 5, 5, 0.98) 100%), url('../../images/events/01.webp');
+  background-image: linear-gradient(to bottom, rgba(5, 5, 5, 0.28) 0%, rgba(5, 5, 5, 0.62) 55%, rgba(5, 5, 5, 0.98) 100%), url('../../images/Events/01.webp');
   background-size: var(--parallax-zoom);
   background-position: center var(--parallax-y);
   
@@ -2403,7 +2403,7 @@ body {
       min-height: 100svh;
       --parallax-zoom: cover;
       --parallax-y: 50%;
-      background-image: url('../../images/events/01.webp');
+      background-image: url('../../images/Events/01.webp');
       background-size: cover !important;
       background-position: center center !important;
       background-repeat: no-repeat;
