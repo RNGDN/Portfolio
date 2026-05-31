@@ -156,6 +156,7 @@
           try {
             const lang = (window.getCurrentSiteLanguage && window.getCurrentSiteLanguage()) || 'zh';
             window.history.pushState({ spa: pageName, lang }, '', `/#${pageName}-${lang}`);
+            window.dispatchEvent(new CustomEvent('spa-navigation-changed', { detail: { page: pageName, lang } }));
           } catch(e) {}
         }
       })

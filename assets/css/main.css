@@ -962,7 +962,7 @@ body {
 ========================================= */
 .career-section {
   width: 100%;
-  padding: 90px 5% 80px;
+  padding: 72px 5% 64px;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -1242,7 +1242,7 @@ body {
 ========================================= */
 @media (max-width: 900px) {
   .career-content {
-    flex-direction: column;
+    display: block;
     gap: 10px;
   }
   .career-sidebar {
@@ -1254,6 +1254,8 @@ body {
   }
   .item-title-col {
     width: 100%;
+    padding-left: 0;
+    margin-left: 0;
   }
 }
 
@@ -1377,10 +1379,14 @@ body {
     letter-spacing: 1.4px;
   }
 
-  .featured-clients-section,
-  .career-section {
+  .featured-clients-section {
     padding-top: 72px;
     padding-bottom: 72px;
+  }
+
+  .career-section {
+    padding-top: 48px;
+    padding-bottom: 48px;
   }
 
   .clients-header {
@@ -1402,6 +1408,21 @@ body {
   .title-outline {
     margin-top: 0;
     -webkit-text-stroke: 0;
+  }
+
+  .impact-section .title-solid,
+  .impact-section .title-outline {
+    font-size: clamp(1.5rem, 5.8vw, 2.25rem);
+    letter-spacing: 4px;
+    line-height: 1.05;
+  }
+
+  .impact-section .title-solid {
+    margin-bottom: 8px;
+  }
+
+  .impact-section .title-outline {
+    margin-top: 0;
   }
 
   .career-content {
@@ -1525,6 +1546,25 @@ body {
   .title-outline {
     margin-top: 2px;
     -webkit-text-stroke: 0;
+  }
+
+  .impact-section .clients-header {
+    margin-bottom: 28px;
+  }
+
+  .impact-section .title-solid,
+  .impact-section .title-outline {
+    font-size: clamp(1.5rem, 5.8vw, 2.25rem);
+    letter-spacing: 4px;
+    line-height: 1.05;
+  }
+
+  .impact-section .title-solid {
+    margin-bottom: 8px;
+  }
+
+  .impact-section .title-outline {
+    margin-top: 0;
   }
 }
 
@@ -2476,5 +2516,28 @@ body {
     width: 100%;
     margin-left: 0;
     margin-right: 0;
+  }
+
+  .impact-section .clients-header {
+    margin-bottom: 30px;
+  }
+
+  .impact-section {
+    padding-top: 48px;
+  }
+
+  .impact-section .title-solid,
+  .impact-section .title-outline {
+    font-size: clamp(1.25rem, 6vw, 1.8rem);
+    letter-spacing: 3px;
+    line-height: 1.05;
+  }
+
+  .impact-section .title-solid {
+    margin-bottom: 14px;
+  }
+
+  .impact-section .title-outline {
+    margin-top: 2px;
   }
 }

@@ -181,5 +181,6 @@ document.addEventListener("DOMContentLoaded", function() {
   // run once and on hash changes
   syncMenuToHash();
   window.addEventListener('hashchange', syncMenuToHash);
+  window.addEventListener('spa-navigation-changed', syncMenuToHash);
 
 });
