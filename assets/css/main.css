@@ -178,6 +178,59 @@ html.spa-loading .site-footer {
 .nav-left a { margin-right: 24px; }
 .nav-left a:last-child { margin-right: 0; }
 
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.lang-toggle {
+  appearance: none;
+  border: 1px solid #333;
+  background: transparent;
+  color: #fff;
+  font-family: 'Space Mono', 'Courier New', monospace;
+  font-size: 11px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.lang-toggle .lang-option,
+.lang-toggle .lang-sep {
+  display: inline-block;
+  font: inherit;
+}
+
+.lang-toggle .lang-option {
+  opacity: 0.45;
+  font-weight: 400;
+}
+
+.lang-toggle .lang-sep {
+  margin: 0 3px;
+  opacity: 0.75;
+}
+
+.lang-toggle.lang-zh-active .lang-zh,
+.lang-toggle.lang-en-active .lang-en {
+  opacity: 1;
+  font-weight: 800;
+}
+
+.lang-toggle:hover {
+  background: #222;
+  border-color: #666;
+}
+
+.mobile-lang-toggle,
+.overlay-lang-toggle {
+  display: none;
+}
+
 /* 【核心修改 1：將 Logo 粗細與字體設定改回來，使其在桌面和選單展開時都保持粗體】 */
 .nav-center a { 
   font-size: 14px; 
@@ -190,7 +243,7 @@ html.spa-loading .site-footer {
   color: #fff;
 }
 .nav-center { position: absolute; left: 50%; transform: translateX(-50%); }
-.nav-right a { margin-left: 16px; }
+.nav-right a { margin-left: 0; }
 
 /* 手機版開啟選單的漢堡按鈕 (桌面版預設隱藏) */
 .mobile-menu-toggle {
@@ -210,6 +263,12 @@ html.spa-loading .site-footer {
 .mobile-menu-overlay.is-open { opacity: 1; pointer-events: auto; }
 
 .menu-header { display: flex; justify-content: space-between; align-items: center; padding-left: 0; margin-bottom: 20px; }
+
+.menu-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
 /* 彈出選單內的 Logo，確保其粗體風格與主 Logo 一致 */
 .menu-header .logo-link { 
@@ -242,8 +301,7 @@ html.spa-loading .site-footer {
 .mobile-nav-links { display: flex; flex-direction: column; flex-grow: 1; padding-top: 10px; }
 .mobile-link { color: #fff; text-decoration: none; font-size: 36px; font-family: 'Space Mono', 'Courier New', monospace; padding: 20px 0; border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; text-transform: uppercase; }
 .mobile-link:last-child { border-bottom: none; }
-.mobile-link .bullet { font-size: 20px; margin-right: 15px; opacity: 0; transform: translateY(-2px); }
-.mobile-link.active .bullet { opacity: 1; }
+  .mobile-link .bullet { display: none; }
 
 .mobile-socials { display: flex; justify-content: space-between; align-items: center; padding: 20px 0 40px 0; }
 .arrows { color: #555; font-family: monospace; font-size: 14px; letter-spacing: 1px; }
@@ -272,6 +330,31 @@ html.spa-loading .site-footer {
     padding: calc(14px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) 14px calc(16px + env(safe-area-inset-left));
   }
   .nav-left, .nav-right { display: none; } /* 隱藏桌面選單 */
+
+  .desktop-lang-toggle {
+    display: none;
+  }
+
+  .mobile-lang-toggle {
+    display: block;
+    position: absolute;
+    top: calc(14px + env(safe-area-inset-top));
+    right: calc(56px + env(safe-area-inset-right));
+  }
+
+  .menu-header {
+    align-items: flex-start;
+  }
+
+  .menu-header .logo-link {
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  .menu-divider::before,
+  .menu-divider::after {
+    display: none;
+  }
   
   /* 解除原本桌面版的絕對置中設定 */
   .nav-center {
@@ -290,7 +373,7 @@ html.spa-loading .site-footer {
     font-weight: 400; 
     font-family: 'Anton', 'Impact', 'Arial Black', sans-serif;
     letter-spacing: 2px;
-    margin-top: 2px;
+    margin-top: 0;
     line-height: 1;
     display: block;
     max-width: 100%;
@@ -300,7 +383,12 @@ html.spa-loading .site-footer {
   }
 
   .menu-header .logo-link {
-    margin-top: 9px;
+    align-self: flex-start;
+    padding-top: 8px;
+  }
+
+  .overlay-lang-toggle {
+    display: inline-flex;
   }
 
   /* 顯示漢堡按鈕，並確保其 monospace 風格 */
@@ -1367,7 +1455,16 @@ body {
   }
 
   .mobile-menu-overlay {
-    padding: 16px;
+    padding: calc(12px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right)) 12px calc(12px + env(safe-area-inset-left));
+  }
+
+  .mobile-lang-toggle {
+    top: calc(12px + env(safe-area-inset-top));
+    right: calc(52px + env(safe-area-inset-right));
+  }
+
+  .menu-header-actions {
+    gap: 8px;
   }
 
   .nav-center a,
@@ -1461,11 +1558,11 @@ body {
 }
 
 .title-outline {
-  margin-top: 0; /* 來自你的設定 */
+  margin-top: 0;
   margin-bottom: 0;
-  /* 實現簍空邊框字的關鍵 CSS */
-  color: transparent; 
-  -webkit-text-stroke: 2px #555555; /* 2px的灰色邊框，可依喜好調整粗細與顏色 */
+  /* Use solid white text instead of outlined/transparent */
+  color: #ffffff;
+  -webkit-text-stroke: 0;
 }
 
 /* 網格系統：桌面端 4 欄，平板 2 欄，手機 1 欄 */
@@ -1803,7 +1900,7 @@ body {
   align-items: center;
   margin-bottom: 20px; 
   padding-bottom: 20px;
-  border-bottom: 1px dashed #1a1a1a;
+  border-bottom: 1px solid #1a1a1a;
   height: 20px;
 }
 

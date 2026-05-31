@@ -16,15 +16,29 @@ document.addEventListener("DOMContentLoaded", function() {
   const menuLinks = document.querySelectorAll('.main-menu-link');
   // 選取所有 Logo (含桌面與手機)
   const logoLinks = document.querySelectorAll('.logo-link'); 
+  const mobileMenu = document.getElementById('mobileMenu');
+  const openMenuBtn = document.getElementById('openMenuBtn');
+  const closeMenuBtn = document.getElementById('closeMenuBtn');
+  const mobileLinks = document.querySelectorAll('.mobile-link');
+  const langToggles = document.querySelectorAll('[data-lang-toggle]');
+
+  function getCurrentPageName() {
+    const hash = (location.hash || '').replace(/^#/, '');
+    const m = hash.match(/^(about|work|contact|home)(?:-(en|zh))?$/);
+    if (m) return m[1];
+    return (document.body && document.body.dataset.sitePage) || 'home';
+  }
 
   function updateDesktopMenu(clickedLink) {
     menuLinks.forEach(item => {
       item.classList.remove('active');
-      item.textContent = item.textContent.replace('• ', '');
     });
     if (clickedLink && clickedLink.classList.contains('main-menu-link')) {
       clickedLink.classList.add('active');
-      clickedLink.textContent = '• ' + clickedLink.textContent;
+    }
+
+    if (typeof window.applySiteLanguage === 'function') {
+      window.applySiteLanguage(document, getCurrentPageName());
     }
   }
 
@@ -69,8 +83,6 @@ document.addEventListener("DOMContentLoaded", function() {
       const homeLink = document.querySelector('.main-menu-link[href="/#"]') || document.querySelector('.main-menu-link[href="/"]');
       if (homeLink) {
         updateDesktopMenu(homeLink);
-        homeLink.classList.add('active');
-        if(!homeLink.textContent.includes('•')) homeLink.textContent = '• ' + homeLink.textContent;
       }
       // Desktop logo should go to the real index
       window.location.href = '/';
@@ -79,11 +91,11 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 
+  if (typeof window.applySiteLanguage === 'function') {
+    window.applySiteLanguage(document, getCurrentPageName());
+  }
+
   // --- 3. 手機版全螢幕選單互動 ---
-  const mobileMenu = document.getElementById('mobileMenu');
-  const openMenuBtn = document.getElementById('openMenuBtn');
-  const closeMenuBtn = document.getElementById('closeMenuBtn');
-  const mobileLinks = document.querySelectorAll('.mobile-link');
 
   // 開啟選單
   if (openMenuBtn && mobileMenu) {
@@ -135,10 +147,20 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 
+  langToggles.forEach((button) => {
+    button.addEventListener('click', () => {
+      if (typeof window.toggleSiteLanguage === 'function') {
+        window.toggleSiteLanguage(document, getCurrentPageName());
+      }
+      if (typeof window.applySiteLanguage === 'function') {
+        window.applySiteLanguage(document, getCurrentPageName());
+      }
+    });
+  });
+
   // 同步選單狀態（在載入或 hash 變更時保持點點在對應選單）
   function syncMenuToHash() {
-    const hash = (location.hash || '').replace(/^#/, '');
-    const page = hash || '';
+    const page = getCurrentPageName();
 
     // desktop
     const desktopSelector = page ? `.main-menu-link[href="/#${page}"]` : `.main-menu-link[href="/#"]`;
@@ -150,6 +172,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const mobileSelector = page ? `.mobile-link[href="/#${page}"]` : `.mobile-link[href="/#"]`;
     const mobileLink = document.querySelector(mobileSelector);
     if (mobileLink) mobileLink.classList.add('active');
+
+    if (typeof window.applySiteLanguage === 'function') {
+      window.applySiteLanguage(document, page);
+    }
   }
 
   // run once and on hash changes

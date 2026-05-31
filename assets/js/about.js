@@ -80,6 +80,14 @@
         root.innerHTML = html;
         bindSpaTargetLinks(root);
 
+        if (document.body) {
+          document.body.dataset.sitePage = pageName;
+        }
+
+        if (typeof window.applySiteLanguage === 'function') {
+          window.applySiteLanguage(root, pageName);
+        }
+
         if (typeof window.initEmbeddedMediaFallback === 'function') {
           window.initEmbeddedMediaFallback(root);
         }
@@ -145,7 +153,10 @@
         if (closeBtn) closeBtn.addEventListener('click', () => closePage(true));
 
         if (pushState && window.history && window.history.pushState) {
-          try { window.history.pushState({ spa: pageName }, '', `/#${pageName}`); } catch(e) {}
+          try {
+            const lang = (window.getCurrentSiteLanguage && window.getCurrentSiteLanguage()) || 'zh';
+            window.history.pushState({ spa: pageName, lang }, '', `/#${pageName}-${lang}`);
+          } catch(e) {}
         }
       })
       .catch(err => {
@@ -169,6 +180,12 @@
       root.classList.remove('page-exit');
       root.innerHTML = originalHTML;
       document.body.classList.remove('spa-about', 'spa-work', 'spa-contact');
+      if (document.body) {
+        document.body.dataset.sitePage = 'home';
+      }
+      if (typeof window.applySiteLanguage === 'function') {
+        window.applySiteLanguage(root, 'home');
+      }
       window.scrollTo({ top: originalScroll });
       try { document.documentElement.classList.remove('spa-loading'); document.body.classList.remove('spa-loading'); } catch(e){}
       currentPage = null;
@@ -203,10 +220,19 @@
 
   // Load SPA fragment from URL hash on initial load (so refresh keeps current view)
   function loadFromHash() {
-    const hash = (location.hash || '').replace(/^#/, '');
-    if (hash === 'about' || hash === 'work' || hash === 'contact') {
+    const hash = (location.hash || '').replace(/^#\/?/, '').replace(/\/?$/, '');
+    const m = hash.match(/^(about|work|contact)(?:-(en|zh))?$/i);
+    if (m) {
+      const page = m[1].toLowerCase();
+      const lang = m[2] ? m[2].toLowerCase() : undefined;
+      if (lang && window.setSiteLanguage) {
+        try { window.setSiteLanguage(lang, document, page); } catch(e) {}
+      }
+      if (document.body) {
+        document.body.dataset.sitePage = page;
+      }
       // load without pushing a new history entry
-      loadPage(hash, false).then(() => {
+      loadPage(page, false).then(() => {
         // Wait for images/videos then poll the fragment height until stable,
         // then restore scroll and reveal the fragment.
         const waitForMedia = (container, timeout = 800) => {
@@ -274,11 +300,20 @@
 
   // Handle manual hash changes (back/forward or user editing hash)
   window.addEventListener('hashchange', () => {
-    const hash = (location.hash || '').replace(/^#/, '');
-    if (hash === 'about' || hash === 'work' || hash === 'contact') {
+    const hash = (location.hash || '').replace(/^#\/?/, '').replace(/\/?$/, '');
+    const m = hash.match(/^(about|work|contact)(?:-(en|zh))?$/i);
+    if (m) {
+      const page = m[1].toLowerCase();
+      const lang = m[2] ? m[2].toLowerCase() : undefined;
+      if (lang && window.setSiteLanguage) {
+        try { window.setSiteLanguage(lang, document, page); } catch(e) {}
+      }
+      if (document.body) {
+        document.body.dataset.sitePage = page;
+      }
       // For direct hash-link navigation (e.g. "Click Here" CTAs), always land at top.
       window.scrollTo({ top: 0, behavior: 'auto' });
-      loadPage(hash, false).then(() => {
+      loadPage(page, false).then(() => {
         // wait for media then poll height stability before restoring scroll and revealing
         const waitForMedia = (container, timeout = 800) => {
           try {

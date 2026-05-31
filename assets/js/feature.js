@@ -23,6 +23,16 @@ function initWorkMediaFallback(scope = document) {
     fallbackImage.setAttribute('aria-hidden', 'true');
     card.insertBefore(fallbackImage, media);
 
+    if (media.tagName === 'VIDEO' && !media.hasAttribute('preload')) {
+      media.setAttribute('preload', 'metadata');
+    }
+
+    if (typeof media.load === 'function' && media.readyState === 0) {
+      try {
+        media.load();
+      } catch (e) {}
+    }
+
     let settled = false;
     const markReady = () => {
       if (settled) return;
@@ -323,7 +333,8 @@ const portfolioItems = [
     title: "DREAM REALITY",
     projectUrl: "https://www.behance.net/gallery/202521069/MFA-Thesis-Book-Slides-Dream-Reality",
     image: "images/TB.webp",
-    description: "Every day, we experience two realities. The first is experienced when we are awake. The second is experienced when we are asleep, dreaming. Dreams are often viewed as experiences that are out of our control. For me, this is not the case. My thesis is an exploration into the unique realm of lucid dreaming, a state where the dreamer is aware they are dreaming. As a result of this awareness, the dreamer has the ability to influence their own dream narrative. ",
+    description: "Every day, we experience two realities. The first is experienced when we are awake. The second is experienced when we are asleep, dreaming. Dreams are often viewed as experiences that are out of our control. For me, this is not the case. My thesis is an exploration into the unique realm of lucid dreaming, a state where the dreamer is aware they are dreaming. As a result of this awareness, the dreamer has the ability to influence their own dream narrative.",
+    zhDescription: "每天，我們經歷兩種現實：清醒時的現實與睡夢中的現實。夢境常被視為不可控的體驗，但我並不這麼認為。我的論文探索『清醒夢』的特殊領域——夢者在夢中意識到自己正在做夢，因而能以此意識影響夢境敘事。",
     dimensions: "156 x 235 mm",
     pages: "113 pages",
     language: "ENGLISH",
@@ -335,6 +346,7 @@ const portfolioItems = [
     projectUrl: "https://arxiv.org/abs/2506.08872",
     image: "images/YB.webp", 
     description: "This study examines the neural and behavioral impact of LLM-assisted essay writing across LLM, Search Engine, and Brain-only groups. EEG and essay analysis showed the strongest brain connectivity in Brain-only participants and the weakest in LLM users, with lower ownership of writing in the LLM condition. The findings suggest that while LLMs improve convenience, long-term reliance may reduce cognitive engagement in learning.",
+    zhDescription: "本研究檢視大型語言模型（LLM）輔助寫作對神經與行為的影響，將受試者分為 LLM、搜尋引擎與僅用大腦三組。腦電圖與作文分析顯示，僅用大腦組的腦網路連結最強，LLM 使用者最弱，且 LLM 組對作品的擁有感較低。研究顯示，雖然 LLM 提升了便利性，但長期依賴可能降低學習時的認知投入。",
     dimensions: "LETTER SIZE",
     pages: "216 pages",
     language: "ENGLISH",
@@ -382,6 +394,11 @@ function initIndicators() {
   portfolioItems.forEach((_, index) => {
     const div = document.createElement('div');
     div.className = `indicator ${index === currentIndex ? 'active' : ''}`;
+    div.style.cursor = 'pointer';
+    div.addEventListener('click', () => {
+      currentIndex = index;
+      updateUIWithAnimation();
+    });
     els.indicatorContainer.appendChild(div);
   });
 }
@@ -403,10 +420,26 @@ function updateUIWithAnimation() {
       els.title.textContent = item.title;
     }
 
-    els.desc.textContent = item.description;
+    // localized description if available
+    try {
+      const lang = (window.getCurrentSiteLanguage && window.getCurrentSiteLanguage()) || 'en';
+      els.desc.textContent = (lang === 'zh' && item.zhDescription) ? item.zhDescription : item.description;
+    } catch (e) {
+      els.desc.textContent = item.description;
+    }
     els.dim.textContent = item.dimensions;
     els.pages.textContent = item.pages;
-    els.lang.textContent = item.language;
+    // localized language label
+    try {
+      const currentLang = (window.getCurrentSiteLanguage && window.getCurrentSiteLanguage()) || 'en';
+      if (currentLang === 'zh') {
+        els.lang.textContent = item.language === 'ENGLISH' ? '英文' : item.language;
+      } else {
+        els.lang.textContent = item.language;
+      }
+    } catch (e) {
+      els.lang.textContent = item.language;
+    }
     els.pub.textContent = item.publisher;
 
     const indicators = els.indicatorContainer.children;
@@ -500,6 +533,11 @@ if (portfolioSwipeArea) {
 initIndicators();
 preloadPortfolioImages();
 updateUIWithAnimation();
+
+// Refresh portfolio UI when language changes elsewhere
+window.addEventListener('site-language-changed', () => {
+  try { updateUIWithAnimation(); } catch (e) {}
+});
 
 
 

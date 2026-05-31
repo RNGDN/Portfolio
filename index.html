@@ -20,9 +20,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://player.vimeo.com" crossorigin>
+    <link rel="preload" as="image" href="images/xianhaoliao.webp">
     <link rel="preload" as="image" href="images/TB.webp">
     <link rel="preload" as="image" href="images/YB.webp">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <script src="assets/js/i18n.js" defer></script>
     <script src="assets/js/navbar.js" defer></script>
     <script src="assets/js/about.js" defer></script>
     <script src="assets/js/main.js" defer></script>
@@ -37,8 +39,8 @@
       // If the URL has an SPA fragment, hide the main content immediately
       // to avoid flashing the index content before the SPA fragment loads.
       try {
-        const hash = location.hash || '';
-        if (hash === '#about' || hash === '#work' || hash === '#contact') {
+        const hash = (location.hash || '').replace(/^#\/?/, '').replace(/\/?$/, '');
+        if (/^(?:about|work|contact)(?:-(?:en|zh))?$/i.test(hash)) {
           document.documentElement.classList.add('spa-loading');
           document.body.classList.add('spa-loading');
         }
@@ -47,10 +49,10 @@
 
     <nav class="top-nav">
       <div class="nav-left">
-        <a href="/#" class="main-menu-link active">• HOME</a>
-        <a href="/#about" class="main-menu-link">ABOUT</a>
-        <a href="/#work" class="main-menu-link">WORK</a>
-        <a href="/#contact" class="main-menu-link">CONTACT</a>
+        <a href="/#" class="main-menu-link active" data-menu-key="home">• HOME</a>
+        <a href="/#about" class="main-menu-link" data-menu-key="about">ABOUT</a>
+        <a href="/#work" class="main-menu-link" data-menu-key="work">WORK</a>
+        <a href="/#contact" class="main-menu-link" data-menu-key="contact">CONTACT</a>
       </div>
 
       <div class="nav-center">
@@ -62,23 +64,28 @@
         <a href="https://www.linkedin.com/in/xian-hao-liao/" target="_blank" rel="noopener noreferrer" class="social-link">in</a>
         <a href="https://www.youtube.com/@HarryLiaoVideo" target="_blank" rel="noopener noreferrer" class="social-link">YT</a>
         <a href="https://www.instagram.com/xianhaoliao.design/" target="_blank" rel="noopener noreferrer" class="social-link">IG</a>
+        <button class="lang-toggle desktop-lang-toggle" type="button" data-lang-toggle><span class="lang-option lang-en">EN</span><span class="lang-sep">/</span><span class="lang-option lang-zh">中</span></button>
       </div>
 
       <button class="mobile-menu-toggle" id="openMenuBtn" aria-label="Open menu">☰</button>
+      <button class="lang-toggle mobile-lang-toggle" type="button" data-lang-toggle><span class="lang-option lang-en">EN</span><span class="lang-sep">/</span><span class="lang-option lang-zh">中</span></button>
     </nav>
     <div class="mobile-menu-overlay" id="mobileMenu">
       <div class="menu-header">
         <a href="/#" class="logo-link">HARRY LIAO</a>
-        <button class="close-btn" id="closeMenuBtn" aria-label="Close menu">♦ CLOSE ♦</button>
+        <div class="menu-header-actions">
+          <button class="lang-toggle overlay-lang-toggle" type="button" data-lang-toggle><span class="lang-option lang-en">EN</span><span class="lang-sep">/</span><span class="lang-option lang-zh">中</span></button>
+          <button class="close-btn" id="closeMenuBtn" aria-label="Close menu">♦ CLOSE ♦</button>
+        </div>
       </div>
 
       <div class="menu-divider"></div>
 
       <nav class="mobile-nav-links">
-        <a href="/#" class="mobile-link active"><span class="bullet">▪</span> HOME</a>
-        <a href="/#about" class="mobile-link"><span class="bullet">▪</span> ABOUT</a>
-        <a href="/#work" class="mobile-link"><span class="bullet">▪</span> WORK</a>
-        <a href="/#contact" class="mobile-link"><span class="bullet">▪</span> CONTACT</a>
+        <a href="/#" class="mobile-link active" data-menu-key="home">HOME</a>
+        <a href="/#about" class="mobile-link" data-menu-key="about">ABOUT</a>
+        <a href="/#work" class="mobile-link" data-menu-key="work">WORK</a>
+        <a href="/#contact" class="mobile-link" data-menu-key="contact">CONTACT</a>
       </nav>
 
       <div class="menu-divider"></div>
@@ -195,7 +202,7 @@
     
 <a href="https://www.behance.net/xianhaoliao-design" target="_blank" rel="noopener noreferrer" class="portfolio-button">
   <span class="diamond">◆</span>
-  SEE FULL PORTFOLIO
+  <span class="portfolio-button-label">SEE FULL PORTFOLIO</span>
   <span class="diamond">◆</span>
 </a>
      
@@ -233,8 +240,8 @@
             <div class="crosshair top-right"></div>
             <div class="crosshair bottom-left"></div>
             <div class="crosshair bottom-right"></div>
-            <div class="logo-placeholder">Cocooks</div>
-            <div class="hover-text">&gt;&gt; COCOOKS &lt;&lt;</div>
+            <div class="logo-placeholder">Cocook</div>
+            <div class="hover-text">&gt;&gt; COCOOK &lt;&lt;</div>
           </div>
 
           <div class="client-item" data-client="MIT">
