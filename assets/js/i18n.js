@@ -265,6 +265,22 @@
     localizeText(root, '.about-title', aboutZh.aboutTitle);
     localizeText(root, '.about-sub', aboutZh.bio);
     localizeText(root, '.resume-btn', aboutZh.resume);
+
+    // Set the resume href based on language
+    const resumeBtn = root.querySelector('.resume-btn');
+    if (resumeBtn) {
+      const scriptEl = document.querySelector('script[src*="about.js"]');
+      const scriptSrc = scriptEl ? scriptEl.getAttribute('src') : '';
+      const match = scriptSrc.match(/^(.*)assets\/js\/about\.js/);
+      const prefix = match ? match[1] : '';
+      
+      if (getCurrentLang() === 'zh') {
+        resumeBtn.setAttribute('href', prefix + 'upload/廖先皓_中文簡歷.pdf');
+      } else {
+        resumeBtn.setAttribute('href', prefix + 'upload/Resume_Harry_Liao_CN.pdf');
+      }
+    }
+
     localizeText(root, '.moments-title', aboutZh.momentsTitle);
     localizeList(root, '.moment-card p', aboutZh.moments);
     localizeText(root, '.thesis-text h3', aboutZh.thesisTitle);
