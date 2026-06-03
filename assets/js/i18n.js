@@ -35,7 +35,7 @@
 
   const homeAccordionZh = [
     ['GATE.COM：Red Bull F1 合作', '負責高保真 UX 與全球活動頁。'],
-    ['Boston University：設計教學', '帶領 20 位學生把設計策略落地。'],
+    ['Boston University：設計教學', '帶領過超過 50 位學生把設計策略落地。'],
     ['The UPS Store：營收與印務優化', '用數位印務與設計整合提升效率。'],
     ['MIT Media Lab：人機互動研究', '參與 Human 2.0 與 AI、BCI、義肢研究。'],
     ['BJ\'s Wholesale Club：動態視覺', '為 NASCAR 與 Nationals 專案製作視覺。'],
@@ -50,9 +50,9 @@
   ];
 
   const homeProjectZh = [
-    'GATE TRAVEL 為 2025 推出的新產品，主打快速預訂與加密支付。',
+    'GATE TRAVEL 推出的新產品，主打快速預訂與加密支付。',
     '一款幫助年輕人建立健康飲食習慣的 App。',
-    'Harry 與新銳歌手 Luna 合作的 house 單曲視覺，描寫女孩的內心世界。',
+    'Harry 與新銳歌手 Luna 合作的音樂單曲視覺MV，描寫女孩的內心世界。',
   ];
 
   const workCardZh = {
@@ -86,6 +86,7 @@
   };
 
   const aboutZh = {
+    aboutTitle: '廖先皓(Harry)',
     bio: 'Harry 是跨領域多媒體設計師，擅長視覺、UX、互動與動態。2024 年取得 MassArt DMI MFA，專注多媒體設計與交互設計。',
     resume: '履歷下載',
     momentsTitle: 'Harry 的亮點',
@@ -93,10 +94,10 @@
     thesisTitle: '論文書',
     thesisBody: '《Dream Reality》：探索夢境與夢的視覺表現。',
     thesisBtn: '論文書 PDF',
-    inviteTitle: '我想邀請您查看我的作品集PDF',
-    inviteBody: '裡面收集了所有我的作品。',
+    inviteTitle: '邀請您查看Harry的作品集PDF',
+    inviteBody: '裡面收集了所有Harry的作品。',
     inviteBtn: '另外開啟PDF',
-    workTitle: '繼續觀看我的線上作品',
+    workTitle: '看看廖先皓 Harry線上作品',
     workBtn: '前往作品頁面',
     skill1Title: '設計工具',
     skill1Body: 'Photoshop, Illustrator, InDesign, Premiere, After Effects, Cinema 4D, Blender, Figma.',
@@ -105,7 +106,7 @@
   };
 
   const contactZh = {
-    kicker: '快來聯絡我',
+    kicker: '快來聯絡 廖先皓 Harry',
     send: '寄信',
     caption: '// 有合作、提案或想打聲招呼，歡迎聯絡。',
   };
@@ -114,7 +115,7 @@
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (SUPPORTED_LANGS.has(stored)) return stored;
-    } catch (e) {}
+    } catch (e) { }
     return DEFAULT_LANG;
   }
 
@@ -122,7 +123,7 @@
     if (!SUPPORTED_LANGS.has(lang)) return DEFAULT_LANG;
     try {
       localStorage.setItem(STORAGE_KEY, lang);
-    } catch (e) {}
+    } catch (e) { }
     return lang;
   }
 
@@ -236,7 +237,7 @@
     localizeList(root, '.accordion-item .title-text', homeAccordionZh.map((item) => item[0]));
     localizeList(root, '.accordion-item .preview-text', homeAccordionZh.map((item) => item[1]));
     localizeList(root, '.accordion-item .full-text', homeAccordionZh.map((item) => item[1]));
-    localizeText(root, '.impact-section .title-solid', '廖先皓');
+    localizeText(root, '.impact-section .title-solid', '廖先皓 Harry');
     localizeText(root, '.impact-section .title-outline', '影響世界');
 
     // Impact cards (translated and shortened)
@@ -260,6 +261,7 @@
 
   function applyAbout(scope) {
     const root = scope || document;
+    localizeText(root, '.about-title', aboutZh.aboutTitle);
     localizeText(root, '.about-sub', aboutZh.bio);
     localizeText(root, '.resume-btn', aboutZh.resume);
     localizeText(root, '.moments-title', aboutZh.momentsTitle);
@@ -270,7 +272,7 @@
     localizeText(root, '.invite-cta h3', aboutZh.inviteTitle);
     localizeText(root, '.invite-cta p', aboutZh.inviteBody);
     localizeText(root, '.primary', aboutZh.inviteBtn);
-    
+
     // skill blocks
     localizeText(root, '.skill-row .skill-block:nth-child(1) h3', aboutZh.skill1Title);
     localizeText(root, '.skill-row .skill-block:nth-child(1) p', aboutZh.skill1Body);
@@ -291,7 +293,7 @@
     localizeText(root, '.work-featured .work-overlay p', workCardZh.featured[1]);
     localizeList(root, '.work-grid .work-overlay h2', workCardZh.grid.map((item) => item[0]));
     localizeList(root, '.work-grid .work-overlay p', workCardZh.grid.map((item) => item[1]));
-    localizeText(root, '.learn-more-title', '聯絡廖先皓');
+    localizeText(root, '.learn-more-title', '聯絡 廖先皓 Harry');
     localizeText(root, '.learn-more-btn span:first-child', '點這邊');
   }
 
@@ -335,14 +337,14 @@
     try {
       const page = pageName || (document.body && document.body.dataset.sitePage) || 'home';
       if (window.history && window.history.replaceState) {
-        try { window.history.replaceState({ spa: page, lang: next }, '', `/#${page}-${next}`); } catch (e) {}
+        try { window.history.replaceState({ spa: page, lang: next }, '', `/#${page}-${next}`); } catch (e) { }
       }
-    } catch (e) {}
+    } catch (e) { }
     // notify other modules the language changed
     try {
       const ev = new CustomEvent('site-language-changed', { detail: { lang: next, page: pageName || (document.body && document.body.dataset.sitePage) || 'home' } });
       window.dispatchEvent(ev);
-    } catch (e) {}
+    } catch (e) { }
     return next;
   }
 

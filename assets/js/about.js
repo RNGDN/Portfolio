@@ -57,8 +57,8 @@
     const token = Symbol(pageName);
     loadPage._token = token;
 
-    // Prevent FOUC on SPA-triggered About navigation.
-    if (pushState && pageName === 'about') {
+    // Prevent FOUC on SPA-triggered page navigation.
+    if (pushState && (pageName === 'about' || pageName === 'work' || pageName === 'contact')) {
       try {
         document.documentElement.classList.add('spa-loading');
         document.body.classList.add('spa-loading');
