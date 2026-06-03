@@ -128,7 +128,8 @@
   }
 
   function getCurrentLang() {
-    return getStoredLang();
+    // If the URL path contains '/zh', force Chinese. Otherwise force English.
+    return window.location.pathname.includes('/zh') ? 'zh' : 'en';
   }
 
   function setDocumentTitle(pageName, lang) {
@@ -349,8 +350,18 @@
   }
 
   function toggleSiteLanguage(scope = document, pageName) {
-    const next = getCurrentLang() === 'zh' ? 'en' : 'zh';
-    return setSiteLanguage(next, scope, pageName);
+    const path = window.location.pathname.replace(/^\/+/, '').replace(/\/+$/, '');
+    const isZh = path.startsWith('zh');
+    const page = isZh ? path.replace(/^zh\/?/, '') : path;
+    
+    if (isZh) {
+      // Go to English
+      window.location.href = '/' + page;
+    } else {
+      // Go to Chinese
+      window.location.href = '/zh/' + page;
+    }
+    return isZh ? 'en' : 'zh';
   }
 
   function getLanguageForToggle() {

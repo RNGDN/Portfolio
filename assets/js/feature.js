@@ -374,14 +374,20 @@ const els = {
 
 const portfolioSwipeArea = document.querySelector('.image-container');
 
+const featureScriptEl = document.querySelector('script[src*="feature.js"]');
+const featureScriptSrc = featureScriptEl ? featureScriptEl.getAttribute('src') : '';
+const featurePathMatch = featureScriptSrc.match(/^(.*)assets\/js\/feature\.js/);
+const featurePrefix = featurePathMatch ? featurePathMatch[1] : '';
+
 function preloadPortfolioImages() {
   portfolioItems.forEach((item) => {
-    if (portfolioImageCache.has(item.image)) return;
+    const fullSrc = featurePrefix + item.image;
+    if (portfolioImageCache.has(fullSrc)) return;
 
     const image = new Image();
     image.decoding = 'async';
-    image.src = item.image;
-    portfolioImageCache.set(item.image, image);
+    image.src = fullSrc;
+    portfolioImageCache.set(fullSrc, image);
 
     if (image.decode) {
       image.decode().catch(() => {});
@@ -455,18 +461,21 @@ function updateUIWithAnimation() {
   };
 
   applyContent();
-  els.image.src = item.image;
+  const fullSrc = featurePrefix + item.image;
+  if (els.image) {
+    els.image.src = fullSrc;
+  }
 
-  const cachedImage = portfolioImageCache.get(item.image);
+  const cachedImage = portfolioImageCache.get(fullSrc);
   if (cachedImage && cachedImage.complete) return;
 
   const fallbackImage = cachedImage || new Image();
   if (!cachedImage) {
-    portfolioImageCache.set(item.image, fallbackImage);
+    portfolioImageCache.set(fullSrc, fallbackImage);
   }
 
   fallbackImage.decoding = 'async';
-  fallbackImage.src = item.image;
+  fallbackImage.src = fullSrc;
 }
 
 function goToPrevPortfolioItem() {

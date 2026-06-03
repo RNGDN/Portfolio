@@ -23,9 +23,12 @@ document.addEventListener("DOMContentLoaded", function() {
   const langToggles = document.querySelectorAll('[data-lang-toggle]');
 
   function getCurrentPageName() {
-    const hash = (location.hash || '').replace(/^#/, '');
-    const m = hash.match(/^(about|work|contact|home)(?:-(en|zh))?$/);
-    if (m) return m[1];
+    const path = window.location.pathname.replace(/^\/+/, '').replace(/\/+$/, '');
+    const isZh = path.startsWith('zh');
+    const page = isZh ? path.replace(/^zh\/?/, '') : path;
+    if (page === 'about' || page === 'work' || page === 'contact') {
+      return page;
+    }
     return (document.body && document.body.dataset.sitePage) || 'home';
   }
 
@@ -49,21 +52,19 @@ document.addEventListener("DOMContentLoaded", function() {
       // 【修改文字： console 輸出改為 Harry Liao 相關】
       const href = this.getAttribute('href');
       console.log('桌面選單準備切換，目標網址:', href);
-      // Normalize href -> page name from hash (eg '/#work' -> 'work') or empty for home
       let page = '';
-      if (href && href.indexOf('#') !== -1) {
-        page = href.split('#')[1] || '';
-      } else if (href === '/' || href === '/index.html') {
+      if (href === '/' || href === '/index.html' || href === '/zh' || href === '/zh/' || href === '/zh/index.html') {
         page = '';
       } else if (href && href.startsWith('/')) {
-        page = href.replace(/^\/+/, '').replace(/\/+$/, '');
+        const cleanPath = href.replace(/^\/+/, '').replace(/\/+$/, '');
+        page = cleanPath.startsWith('zh') ? cleanPath.replace(/^zh\/?/, '') : cleanPath;
       }
 
       if (page === 'about' && window.openAbout) { window.openAbout(); return; }
       if (page === 'work' && window.openWork) { window.openWork(); return; }
       if (page === 'contact' && window.openContact) { window.openContact(); return; }
       // If desktop Home clicked, navigate to the real index page
-      if (page === '') { window.location.href = '/'; return; }
+      if (page === '') { window.location.href = href; return; }
       // 其他路由仍保留預設行為（可自行改為 client-side 路由）
     });
   });
@@ -123,21 +124,19 @@ document.addEventListener("DOMContentLoaded", function() {
       const href = this.getAttribute('href');
       console.log('手機選單點擊，目標:', href);
 
-      // Normalize href -> page name from hash or path
       let page = '';
-      if (href && href.indexOf('#') !== -1) {
-        page = href.split('#')[1] || '';
-      } else if (href === '/' || href === '/index.html') {
+      if (href === '/' || href === '/index.html' || href === '/zh' || href === '/zh/' || href === '/zh/index.html') {
         page = '';
       } else if (href && href.startsWith('/')) {
-        page = href.replace(/^\/+/, '').replace(/\/+$/, '');
+        const cleanPath = href.replace(/^\/+/, '').replace(/\/+$/, '');
+        page = cleanPath.startsWith('zh') ? cleanPath.replace(/^zh\/?/, '') : cleanPath;
       }
 
       if (page === 'about' && window.openAbout) { window.openAbout(); mobileMenu.classList.remove('is-open'); document.body.style.overflow = ''; return; }
       if (page === 'work' && window.openWork) { window.openWork(); mobileMenu.classList.remove('is-open'); document.body.style.overflow = ''; return; }
       if (page === 'contact' && window.openContact) { window.openContact(); mobileMenu.classList.remove('is-open'); document.body.style.overflow = ''; return; }
       // If mobile Home is clicked, always navigate to the real index page
-      if (page === '') { mobileMenu.classList.remove('is-open'); document.body.style.overflow = ''; window.location.href = '/'; return; }
+      if (page === '') { mobileMenu.classList.remove('is-open'); document.body.style.overflow = ''; window.location.href = href; return; }
 
       // 預設延遲收起選單
       setTimeout(() => {
@@ -158,19 +157,20 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 
-  // 同步選單狀態（在載入或 hash 變更時保持點點在對應選單）
-  function syncMenuToHash() {
+  // 同步選單狀態（在載入或 path 變更時保持點點在對應選單）
+  function syncMenuToPath() {
     const page = getCurrentPageName();
+    const prefix = window.location.pathname.includes('/zh') ? '/zh' : '';
 
     // desktop
-    const desktopSelector = page ? `.main-menu-link[href="/#${page}"]` : `.main-menu-link[href="/#"]`;
-    const desktopLink = document.querySelector(desktopSelector);
+    const desktopSelector = (page && page !== 'home') ? `.main-menu-link[href="${prefix}/${page}"]` : `.main-menu-link[href="${prefix}/"]`;
+    const desktopLink = document.querySelector(desktopSelector) || document.querySelector(`.main-menu-link[href="/${page === 'home' ? '' : page}"]`);
     if (desktopLink) updateDesktopMenu(desktopLink);
 
     // mobile
     mobileLinks.forEach(item => item.classList.remove('active'));
-    const mobileSelector = page ? `.mobile-link[href="/#${page}"]` : `.mobile-link[href="/#"]`;
-    const mobileLink = document.querySelector(mobileSelector);
+    const mobileSelector = (page && page !== 'home') ? `.mobile-link[href="${prefix}/${page}"]` : `.mobile-link[href="${prefix}/"]`;
+    const mobileLink = document.querySelector(mobileSelector) || document.querySelector(`.mobile-link[href="/${page === 'home' ? '' : page}"]`);
     if (mobileLink) mobileLink.classList.add('active');
 
     if (typeof window.applySiteLanguage === 'function') {
@@ -178,9 +178,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  // run once and on hash changes
-  syncMenuToHash();
-  window.addEventListener('hashchange', syncMenuToHash);
-  window.addEventListener('spa-navigation-changed', syncMenuToHash);
+  // run once and on path changes
+  syncMenuToPath();
+  window.addEventListener('popstate', syncMenuToPath);
+  window.addEventListener('spa-navigation-changed', syncMenuToPath);
 
 });

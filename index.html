@@ -9,6 +9,10 @@
   <meta name="robots" content="index, follow">
   <title>Xian-Hao (Harry) Liao | Multimedia Design Portfolio</title>
   
+  <link rel="alternate" hreflang="x-default" href="https://harryliao.design/" />
+  <link rel="alternate" hreflang="en" href="https://harryliao.design/" />
+  <link rel="alternate" hreflang="zh-Hant" href="https://harryliao.design/zh/" />
+  
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://harryliao.design/">
@@ -81,8 +85,10 @@
     // If the URL has an SPA fragment, hide the main content immediately
     // to avoid flashing the index content before the SPA fragment loads.
     try {
-      const hash = (location.hash || '').replace(/^#\/?/, '').replace(/\/?$/, '');
-      if (/^(?:about|work|contact)(?:-(?:en|zh))?$/i.test(hash)) {
+      const path = location.pathname.replace(/^\/+/, '').replace(/\/+$/, '');
+      const isZh = path.startsWith('zh');
+      const page = isZh ? path.replace(/^zh\/?/, '') : path;
+      if (/^(about|work|contact)$/i.test(page)) {
         document.documentElement.classList.add('spa-loading');
         document.body.classList.add('spa-loading');
       }
@@ -91,10 +97,10 @@
 
   <nav class="top-nav">
     <div class="nav-left">
-      <a href="/#" class="main-menu-link active" data-menu-key="home">• HOME</a>
-      <a href="/#about" class="main-menu-link" data-menu-key="about">ABOUT</a>
-      <a href="/#work" class="main-menu-link" data-menu-key="work">WORK</a>
-      <a href="/#contact" class="main-menu-link" data-menu-key="contact">CONTACT</a>
+      <a href="/" class="main-menu-link active" data-menu-key="home">• HOME</a>
+      <a href="/about" class="main-menu-link" data-menu-key="about">ABOUT</a>
+      <a href="/work" class="main-menu-link" data-menu-key="work">WORK</a>
+      <a href="/contact" class="main-menu-link" data-menu-key="contact">CONTACT</a>
     </div>
 
     <div class="nav-center">
@@ -122,7 +128,7 @@
   </nav>
   <div class="mobile-menu-overlay" id="mobileMenu">
     <div class="menu-header">
-      <a href="/#" class="logo-link">HARRY LIAO</a>
+      <a href="/" class="logo-link">HARRY LIAO</a>
       <div class="menu-header-actions">
         <button class="lang-toggle overlay-lang-toggle" type="button" data-lang-toggle><span
             class="lang-option lang-en">EN</span><span class="lang-sep">/</span><span
@@ -134,10 +140,10 @@
     <div class="menu-divider"></div>
 
     <nav class="mobile-nav-links">
-      <a href="/#" class="mobile-link active" data-menu-key="home">HOME</a>
-      <a href="/#about" class="mobile-link" data-menu-key="about">ABOUT</a>
-      <a href="/#work" class="mobile-link" data-menu-key="work">WORK</a>
-      <a href="/#contact" class="mobile-link" data-menu-key="contact">CONTACT</a>
+      <a href="/" class="mobile-link active" data-menu-key="home">HOME</a>
+      <a href="/about" class="mobile-link" data-menu-key="about">ABOUT</a>
+      <a href="/work" class="mobile-link" data-menu-key="work">WORK</a>
+      <a href="/contact" class="mobile-link" data-menu-key="contact">CONTACT</a>
     </nav>
 
     <div class="menu-divider"></div>

@@ -46,7 +46,7 @@
   // Persist scroll position across full-page reloads so we can restore after replacing DOM
   window.addEventListener('beforeunload', () => {
     try {
-      const data = { hash: location.hash || '', y: window.scrollY || window.pageYOffset || 0 };
+      const data = { path: location.pathname || '', y: window.scrollY || window.pageYOffset || 0 };
       sessionStorage.setItem('spa-scroll', JSON.stringify(data));
     } catch (e) {}
   });
@@ -65,7 +65,11 @@
       } catch (e) {}
     }
 
-    return fetch(`${pageName}.html`, { cache: 'no-store' })
+    const scriptEl = document.querySelector('script[src*="about.js"]');
+    const scriptSrc = scriptEl ? scriptEl.getAttribute('src') : '';
+    const match = scriptSrc.match(/^(.*)assets\/js\/about\.js/);
+    const prefix = match ? match[1] : '';
+    return fetch(`${prefix}${pageName}.html`, { cache: 'no-store' })
       .then(r => r.text())
       .then(html => {
         if (loadPage._token !== token) return;
@@ -78,6 +82,34 @@
         root.classList.remove('page-exit');
         root.classList.remove('page-enter');
         root.innerHTML = html;
+
+        // Rewrite relative paths in the loaded fragment using the page depth prefix
+        if (prefix) {
+          root.querySelectorAll('img[src], video[src], source[src], video[poster], video[data-fallback]').forEach(el => {
+            if (el.hasAttribute('src')) {
+              const srcVal = el.getAttribute('src');
+              if (srcVal && !srcVal.startsWith('http') && !srcVal.startsWith('/') && !srcVal.startsWith('.') && !srcVal.startsWith('data:')) {
+                el.setAttribute('src', prefix + srcVal);
+              }
+            }
+            const posterVal = el.getAttribute('poster');
+            if (posterVal && !posterVal.startsWith('http') && !posterVal.startsWith('/') && !posterVal.startsWith('.')) {
+              el.setAttribute('poster', prefix + posterVal);
+            }
+            const fallbackVal = el.getAttribute('data-fallback');
+            if (fallbackVal && !fallbackVal.startsWith('http') && !fallbackVal.startsWith('/') && !fallbackVal.startsWith('.')) {
+              el.setAttribute('data-fallback', prefix + fallbackVal);
+            }
+          });
+          
+          root.querySelectorAll('a[href], link[href]').forEach(el => {
+            const hrefVal = el.getAttribute('href');
+            if (hrefVal && !hrefVal.startsWith('http') && !hrefVal.startsWith('/') && !hrefVal.startsWith('.') && !hrefVal.startsWith('#')) {
+              el.setAttribute('href', prefix + hrefVal);
+            }
+          });
+        }
+
         bindSpaTargetLinks(root);
 
         if (document.body) {
@@ -154,8 +186,9 @@
 
         if (pushState && window.history && window.history.pushState) {
           try {
-            const lang = (window.getCurrentSiteLanguage && window.getCurrentSiteLanguage()) || 'zh';
-            window.history.pushState({ spa: pageName, lang }, '', `/#${pageName}-${lang}`);
+            const lang = (window.getCurrentSiteLanguage && window.getCurrentSiteLanguage()) || 'en';
+            const prefix = lang === 'zh' ? '/zh' : '';
+            window.history.pushState({ spa: pageName }, '', `${prefix}/${pageName}`);
             window.dispatchEvent(new CustomEvent('spa-navigation-changed', { detail: { page: pageName, lang } }));
           } catch(e) {}
         }
@@ -219,18 +252,20 @@
   window.closeWork = closePage;
   window.closeContact = closePage;
 
-  // Load SPA fragment from URL hash on initial load (so refresh keeps current view)
-  function loadFromHash() {
-    const hash = (location.hash || '').replace(/^#\/?/, '').replace(/\/?$/, '');
-    const m = hash.match(/^(about|work|contact)(?:-(en|zh))?$/i);
-    if (m) {
-      const page = m[1].toLowerCase();
-      const lang = m[2] ? m[2].toLowerCase() : undefined;
-      if (lang && window.setSiteLanguage) {
-        try { window.setSiteLanguage(lang, document, page); } catch(e) {}
-      }
+  // Load SPA fragment from URL path on initial load (so refresh keeps current view)
+  function loadFromPath() {
+    const path = location.pathname.replace(/^\/+/, '').replace(/\/+$/, '');
+    const isZh = path.startsWith('zh');
+    const page = (isZh ? path.replace(/^zh\/?/, '') : path).toLowerCase();
+    
+    if (page === 'about' || page === 'work' || page === 'contact') {
       if (document.body) {
         document.body.dataset.sitePage = page;
+      }
+      if (window.history && window.history.replaceState) {
+        try {
+          window.history.replaceState({ spa: page }, '', window.location.pathname);
+        } catch(e) {}
       }
       // load without pushing a new history entry
       loadPage(page, false).then(() => {
@@ -287,7 +322,7 @@
             const raw = sessionStorage.getItem('spa-scroll');
             if (raw) {
               const obj = JSON.parse(raw);
-              if ((obj.hash || '') === (location.hash || '')) {
+              if ((obj.path || '') === (location.pathname || '')) {
                 window.scrollTo({ top: obj.y });
                 sessionStorage.removeItem('spa-scroll');
               }
@@ -299,90 +334,11 @@
     }
   }
 
-  // Handle manual hash changes (back/forward or user editing hash)
-  window.addEventListener('hashchange', () => {
-    const hash = (location.hash || '').replace(/^#\/?/, '').replace(/\/?$/, '');
-    const m = hash.match(/^(about|work|contact)(?:-(en|zh))?$/i);
-    if (m) {
-      const page = m[1].toLowerCase();
-      const lang = m[2] ? m[2].toLowerCase() : undefined;
-      if (lang && window.setSiteLanguage) {
-        try { window.setSiteLanguage(lang, document, page); } catch(e) {}
-      }
-      if (document.body) {
-        document.body.dataset.sitePage = page;
-      }
-      // For direct hash-link navigation (e.g. "Click Here" CTAs), always land at top.
-      window.scrollTo({ top: 0, behavior: 'auto' });
-      loadPage(page, false).then(() => {
-        // wait for media then poll height stability before restoring scroll and revealing
-        const waitForMedia = (container, timeout = 800) => {
-          try {
-            const imgs = Array.from(container.querySelectorAll('img'));
-            const vids = Array.from(container.querySelectorAll('video'));
-            const promises = [];
-            imgs.forEach(img => {
-              if (img.complete) return;
-              promises.push(new Promise(res => { img.addEventListener('load', res); img.addEventListener('error', res); }));
-            });
-            vids.forEach(v => {
-              if (v.readyState >= 2) return;
-              promises.push(new Promise(res => { v.addEventListener('loadedmetadata', res); v.addEventListener('error', res); }));
-            });
-            if (promises.length === 0) return Promise.resolve();
-            return Promise.race([Promise.all(promises), new Promise(res => setTimeout(res, timeout))]);
-          } catch (e) { return Promise.resolve(); }
-        };
-
-        const waitForStableHeight = (container, options = {}) => {
-          const interval = options.interval || 100;
-          const timeout = options.timeout || 1200;
-          return new Promise(resolve => {
-            let last = container.scrollHeight;
-            let stableCount = 0;
-            const start = Date.now();
-            const t = setInterval(() => {
-              const nowH = container.scrollHeight;
-              if (nowH === last) {
-                stableCount += 1;
-              } else {
-                stableCount = 0;
-                last = nowH;
-              }
-              if (stableCount >= 2) { clearInterval(t); resolve(); }
-              if (Date.now() - start > timeout) { clearInterval(t); resolve(); }
-            }, interval);
-          });
-        };
-
-        waitForMedia(root, 1000).then(() => waitForStableHeight(root, { interval: 120, timeout: 1600 })).then(() => {
-          try {
-            const raw = sessionStorage.getItem('spa-scroll');
-            if (raw) {
-              const obj = JSON.parse(raw);
-              if ((obj.hash || '') === (location.hash || '')) {
-                window.scrollTo({ top: obj.y });
-                sessionStorage.removeItem('spa-scroll');
-              } else {
-                window.scrollTo({ top: 0, behavior: 'auto' });
-              }
-            } else {
-              window.scrollTo({ top: 0, behavior: 'auto' });
-            }
-          } catch (e) {}
-          try { document.documentElement.classList.remove('spa-loading'); document.body.classList.remove('spa-loading'); } catch (e) {}
-        });
-      });
-    } else {
-      if (currentPage) closePage(false);
-    }
-  });
-
   // Run on initial load
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadFromHash);
+    document.addEventListener('DOMContentLoaded', loadFromPath);
   } else {
-    loadFromHash();
+    loadFromPath();
   }
 
   bindSpaTargetLinks(document);
