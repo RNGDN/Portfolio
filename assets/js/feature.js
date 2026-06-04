@@ -1,3 +1,27 @@
+function resizeAllWorkIframes() {
+  const iframes = document.querySelectorAll('iframe.work-video');
+  iframes.forEach(iframe => {
+    try {
+      const card = iframe.closest('.work-featured-card, .work-card');
+      if (!card) return;
+      const cardWidth = card.clientWidth;
+      const cardHeight = card.clientHeight;
+      const videoRatio = 16 / 9;
+      const cardRatio = cardWidth / cardHeight;
+
+      if (cardRatio > videoRatio) {
+        iframe.style.width = cardWidth + 'px';
+        iframe.style.height = Math.ceil(cardWidth / videoRatio) + 'px';
+      } else {
+        iframe.style.height = cardHeight + 'px';
+        iframe.style.width = Math.ceil(cardHeight * videoRatio) + 'px';
+      }
+    } catch(e) { console.error('resizeVimeoIframe error', e); }
+  });
+}
+
+window.addEventListener('resize', resizeAllWorkIframes);
+
 function initWorkMediaFallback(scope = document) {
   if (!scope) return;
 
@@ -59,7 +83,11 @@ function initWorkMediaFallback(scope = document) {
     };
 
     if (media.tagName === 'IFRAME') {
-      media.addEventListener('load', resolveReady, { once: true });
+      resizeAllWorkIframes();
+      media.addEventListener('load', () => {
+        resizeAllWorkIframes();
+        resolveReady();
+      }, { once: true });
       media.addEventListener('error', resolveFailed, { once: true });
       return;
     }

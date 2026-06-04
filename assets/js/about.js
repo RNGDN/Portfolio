@@ -85,7 +85,7 @@
 
         // Rewrite relative paths in the loaded fragment using the page depth prefix
         if (prefix) {
-          root.querySelectorAll('img[src], video[src], source[src], video[poster], video[data-fallback]').forEach(el => {
+          root.querySelectorAll('img[src], video[src], source[src], video[poster], video[data-fallback], iframe[data-fallback]').forEach(el => {
             if (el.hasAttribute('src')) {
               const srcVal = el.getAttribute('src');
               if (srcVal && !srcVal.startsWith('http') && !srcVal.startsWith('/') && !srcVal.startsWith('.') && !srcVal.startsWith('data:')) {

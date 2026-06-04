@@ -113,12 +113,16 @@
 
 .work-featured-card iframe,
 .work-card iframe {
+  position: absolute;
+  inset: auto;
   top: 50%;
   left: 50%;
-  inset: auto;
-  width: max(177.78vh, 100%);
-  height: max(56.25vw, 100%);
   transform: translate(-50%, -50%);
+  width: auto;
+  height: 100%;
+  aspect-ratio: 16 / 9;
+  min-width: 100%;
+  min-height: 100%;
 }
 
 .work-featured-card {
@@ -452,9 +456,7 @@
   }
 
   .work-featured-card video,
-  .work-card video,
-  .work-featured-card iframe,
-  .work-card iframe {
+  .work-card video {
     top: 0;
     left: 0;
     inset: 0;

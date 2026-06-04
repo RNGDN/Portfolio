@@ -77,6 +77,11 @@ body {
   pointer-events: none;
 }
 
+.video-container iframe {
+  width: max(177.78vh, 100vw) !important;
+  height: max(56.25vw, 100vh) !important;
+}
+
 .media-fallback-host {
   position: relative;
   overflow: hidden;
