@@ -35,7 +35,7 @@
 
   const homeAccordionZh = [
     ['GATE.COM：Red Bull F1 合作', '負責高保真 UX 與全球活動頁。'],
-    ['Boston University：設計教學', '帶領過超過 50 位學生把設計策略落地。'],
+    ['Boston University：設計教學', '帶領過 30+ 位學生把設計策略落地。'],
     ['The UPS Store：營收與印務優化', '用數位印務與設計整合提升效率。'],
     ['MIT Media Lab：人機互動研究', '參與 Human 2.0 與 AI、BCI、義肢研究。'],
     ['BJ\'s Wholesale Club：動態視覺', '為 NASCAR 與 Nationals 專案製作視覺。'],
@@ -223,6 +223,7 @@
     const root = scope || document;
     localizeText(root, '.hero-bottom-info .bottom-left', '設計下一個未來。');
     localizeText(root, '.hero-bottom-info .bottom-right', '▼ 向下探索');
+    localizeText(root, '.hero-title', '廖先皓 HARRY');
     localizeText(root, '.description-content p', '♦ 廖先皓 Harry 擅長結合創意策略與科技敘事，具備介面設計、視覺設計、網頁開發經驗。 ♦');
     localizeList(root, '.project-desc', homeProjectZh);
     localizeText(root, '.view-project', '查看專案');
@@ -249,7 +250,7 @@
     localizeText(root, '.impact-card:nth-child(2) .card-desc', '參與實驗室計畫，於 MIT 開發原型與研究。');
 
     localizeText(root, '.impact-card:nth-child(3) .card-title', '<span class="bullet">◾</span> 指導與教學', { html: true });
-    localizeText(root, '.impact-card:nth-child(3) .card-desc', '指導 50+ 學生，將創意策略轉為業界實作。');
+    localizeText(root, '.impact-card:nth-child(3) .card-desc', '指導 30+ 學生，將創意策略轉為業界實作。');
 
     localizeText(root, '.impact-card:nth-child(4) .card-title', '<span class="bullet">◾</span> 沉浸式展演', { html: true });
     localizeText(root, '.impact-card:nth-child(4) .card-desc', '策展 10+ 沉浸式體驗，整合空間與視覺展演。');

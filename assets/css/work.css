@@ -174,11 +174,6 @@
   filter: saturate(1.02) contrast(1.06);
 }
 
-.work-card:hover,
-.work-featured-card:hover {
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95);
-}
-
 .work-featured-card,
 .work-card {
   isolation: isolate;
@@ -189,16 +184,19 @@
   content: '';
   position: absolute;
   inset: 0;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  z-index: 3;
+  border: 0.5px solid transparent;
+  box-shadow: inset 0 0 0 1px transparent;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 220ms ease, border-color 220ms ease;
+  transition: opacity 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
 }
 
 .work-featured-card:hover::after,
 .work-card:hover::after {
   opacity: 1;
   border-color: rgba(255, 255, 255, 0.96);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.95);
 }
 
 .work-overlay {
@@ -206,7 +204,7 @@
   inset: auto 0 0 0;
   z-index: 2;
   padding: 20px 18px 16px;
-  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.72) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.72) 100%);
   display: grid;
   gap: 4px;
 }
@@ -302,52 +300,52 @@
   background-color: transparent;
 }
 
-.work-table-link > span {
+.work-table-link>span {
   display: block;
   width: 100%;
   padding: 6px 8px;
 }
 
-.work-table-link > span:nth-child(1),
-.work-table-link > span:nth-child(2),
-.work-table-link > span:nth-child(3),
-.work-table-link > span:nth-child(4) {
+.work-table-link>span:nth-child(1),
+.work-table-link>span:nth-child(2),
+.work-table-link>span:nth-child(3),
+.work-table-link>span:nth-child(4) {
   transition: background-color 180ms ease, color 180ms ease;
 }
 
-.work-table-link > span:nth-child(2) {
+.work-table-link>span:nth-child(2) {
   width: auto;
   justify-self: start;
   display: inline-block;
   padding-right: 6px;
 }
 
-.work-table-link:hover > span:nth-child(1),
-.work-table-link:hover > span:nth-child(2),
-.work-table-link:hover > span:nth-child(3),
-.work-table-link:hover > span:nth-child(4),
-.work-table-link:focus-visible > span:nth-child(1),
-.work-table-link:focus-visible > span:nth-child(2),
-.work-table-link:focus-visible > span:nth-child(3),
-.work-table-link:focus-visible > span:nth-child(4) {
+.work-table-link:hover>span:nth-child(1),
+.work-table-link:hover>span:nth-child(2),
+.work-table-link:hover>span:nth-child(3),
+.work-table-link:hover>span:nth-child(4),
+.work-table-link:focus-visible>span:nth-child(1),
+.work-table-link:focus-visible>span:nth-child(2),
+.work-table-link:focus-visible>span:nth-child(3),
+.work-table-link:focus-visible>span:nth-child(4) {
   background: transparent;
   color: inherit;
 }
 
-.work-table-link:hover > span:nth-child(3),
-.work-table-link:focus-visible > span:nth-child(3) {
+.work-table-link:hover>span:nth-child(3),
+.work-table-link:focus-visible>span:nth-child(3) {
   display: inline-block;
   width: auto;
   justify-self: start;
 }
 
-.work-table-link:hover > span:nth-child(2),
-.work-table-link:focus-visible > span:nth-child(2) {
+.work-table-link:hover>span:nth-child(2),
+.work-table-link:focus-visible>span:nth-child(2) {
   padding-right: 4px;
 }
 
-.work-table-link:hover > span:nth-child(4),
-.work-table-link:focus-visible > span:nth-child(4) {
+.work-table-link:hover>span:nth-child(4),
+.work-table-link:focus-visible>span:nth-child(4) {
   background: transparent;
   color: inherit;
 }
@@ -423,6 +421,7 @@
 }
 
 @media (max-width: 1100px) {
+
   .work-card--wide,
   .work-card--third {
     grid-column: span 6;
@@ -512,19 +511,19 @@
     display: none;
   }
 
-  .work-table-link > span {
+  .work-table-link>span {
     padding: 0;
     border: 0;
     background: transparent;
   }
 
-  .work-table-link > span:nth-child(1) {
+  .work-table-link>span:nth-child(1) {
     display: none;
   }
 
-  .work-table-link > span:nth-child(2),
-  .work-table-link > span:nth-child(3),
-  .work-table-link > span:nth-child(4) {
+  .work-table-link>span:nth-child(2),
+  .work-table-link>span:nth-child(3),
+  .work-table-link>span:nth-child(4) {
     display: block;
     width: 100%;
     max-width: 100%;
@@ -536,7 +535,7 @@
     text-transform: uppercase;
   }
 
-  .work-table-link > span:nth-child(2) {
+  .work-table-link>span:nth-child(2) {
     color: #fff;
     font-size: 11px;
     letter-spacing: 0.9px;

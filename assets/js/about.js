@@ -1,12 +1,12 @@
 // about.js
 // Shared SPA loader for About and Work fragments with matching slide animation.
-(function(){
+(function () {
   const root = document.getElementById('mainContent');
   if (!root) {
-    window.openAbout = function(){ window.location.href = '/about'; };
-    window.openWork = function(){ window.location.href = '/work'; };
-    window.openContact = function(){ window.location.href = '/contact'; };
-    window.closeSpaPage = function(){ window.history.back(); };
+    window.openAbout = function () { window.location.href = '/about'; };
+    window.openWork = function () { window.location.href = '/work'; };
+    window.openContact = function () { window.location.href = '/contact'; };
+    window.closeSpaPage = function () { window.history.back(); };
     window.closeAbout = window.closeSpaPage;
     window.closeWork = window.closeSpaPage;
     window.closeContact = window.closeSpaPage;
@@ -48,7 +48,7 @@
     try {
       const data = { path: location.pathname || '', y: window.scrollY || window.pageYOffset || 0 };
       sessionStorage.setItem('spa-scroll', JSON.stringify(data));
-    } catch (e) {}
+    } catch (e) { }
   });
 
   function loadPage(pageName, pushState = true) {
@@ -62,7 +62,7 @@
       try {
         document.documentElement.classList.add('spa-loading');
         document.body.classList.add('spa-loading');
-      } catch (e) {}
+      } catch (e) { }
     }
 
     const scriptEl = document.querySelector('script[src*="about.js"]');
@@ -101,7 +101,7 @@
               el.setAttribute('data-fallback', prefix + fallbackVal);
             }
           });
-          
+
           root.querySelectorAll('a[href], link[href]').forEach(el => {
             const hrefVal = el.getAttribute('href');
             if (hrefVal && !hrefVal.startsWith('http') && !hrefVal.startsWith('/') && !hrefVal.startsWith('.') && !hrefVal.startsWith('#')) {
@@ -147,7 +147,7 @@
             try {
               document.documentElement.classList.remove('spa-loading');
               document.body.classList.remove('spa-loading');
-            } catch (e) {}
+            } catch (e) { }
           });
         }
 
@@ -190,7 +190,7 @@
             const prefix = lang === 'zh' ? '/zh' : '';
             window.history.pushState({ spa: pageName }, '', `${prefix}/${pageName}`);
             window.dispatchEvent(new CustomEvent('spa-navigation-changed', { detail: { page: pageName, lang } }));
-          } catch(e) {}
+          } catch (e) { }
         }
       })
       .catch(err => {
@@ -209,7 +209,7 @@
 
     root.classList.remove('page-enter');
     root.classList.add('page-exit');
-    root.addEventListener('animationend', function handler(){
+    root.addEventListener('animationend', function handler() {
       root.removeEventListener('animationend', handler);
       root.classList.remove('page-exit');
       root.innerHTML = originalHTML;
@@ -221,12 +221,12 @@
         window.applySiteLanguage(root, 'home');
       }
       window.scrollTo({ top: originalScroll });
-      try { document.documentElement.classList.remove('spa-loading'); document.body.classList.remove('spa-loading'); } catch(e){}
+      try { document.documentElement.classList.remove('spa-loading'); document.body.classList.remove('spa-loading'); } catch (e) { }
       currentPage = null;
     });
 
     if (replaceState && window.history && window.history.state && window.history.state.spa === pageName) {
-      try { window.history.back(); } catch(e) {}
+      try { window.history.back(); } catch (e) { }
     }
   }
 
@@ -244,9 +244,9 @@
     }
   });
 
-  window.openAbout = function(){ return loadPage('about', true); };
-  window.openWork = function(){ return loadPage('work', true); };
-  window.openContact = function(){ return loadPage('contact', true); };
+  window.openAbout = function () { return loadPage('about', true); };
+  window.openWork = function () { return loadPage('work', true); };
+  window.openContact = function () { return loadPage('contact', true); };
   window.closeSpaPage = closePage;
   window.closeAbout = closePage;
   window.closeWork = closePage;
@@ -257,7 +257,7 @@
     const path = location.pathname.replace(/^\/+/, '').replace(/\/+$/, '');
     const isZh = path.startsWith('zh');
     const page = (isZh ? path.replace(/^zh\/?/, '') : path).toLowerCase();
-    
+
     if (page === 'about' || page === 'work' || page === 'contact') {
       if (document.body) {
         document.body.dataset.sitePage = page;
@@ -265,7 +265,7 @@
       if (window.history && window.history.replaceState) {
         try {
           window.history.replaceState({ spa: page }, '', window.location.pathname);
-        } catch(e) {}
+        } catch (e) { }
       }
       // load without pushing a new history entry
       loadPage(page, false).then(() => {
@@ -327,8 +327,8 @@
                 sessionStorage.removeItem('spa-scroll');
               }
             }
-          } catch (e) {}
-          try { document.documentElement.classList.remove('spa-loading'); document.body.classList.remove('spa-loading'); } catch (e) {}
+          } catch (e) { }
+          try { document.documentElement.classList.remove('spa-loading'); document.body.classList.remove('spa-loading'); } catch (e) { }
         });
       });
     }
