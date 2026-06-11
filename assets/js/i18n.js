@@ -34,19 +34,19 @@
   };
 
   const homeAccordionZh = [
-    ['GATE.COM：Red Bull F1 合作', '負責高保真 UX 與全球活動頁。'],
-    ['Boston University：設計教學', '帶領過 30+ 位學生把設計策略落地。'],
-    ['The UPS Store：營收與印務優化', '用數位印務與設計整合提升效率。'],
-    ['MIT Media Lab：人機互動研究', '參與 Human 2.0 與 AI、BCI、義肢研究。'],
-    ['BJ\'s Wholesale Club：動態視覺', '為 NASCAR 與 Nationals 專案製作視覺。'],
-    ['MassArt：DMI 網站設計', '優化網站架構與圖像內容，提升體驗。'],
-    ['ABC Design：多媒體系統', '建立跨數位與實體的品牌視覺。'],
-    ['Cocooks：App 視覺與 UX', '打造直覺的料理平台。'],
-    ['Her Way Home：演出視覺', '為音樂演出設計動態畫面。'],
-    ['Fresh Media：展覽作品', '以互動與計算媒體參與展出。'],
-    ['ARCCSRL：義肢研究', '探索人機互動與助行設計。'],
-    ['Your Brain on ChatGPT：媒體訪談', '分享對認知負荷與生成式 AI 的觀察。'],
-    ['Dream Reality：論文書', '以書籍與裝置呈現清醒夢敘事。'],
+    ['GATE.COM：Red Bull F1 合作', '負責高保真 UX 與全球活動頁。', '廖先皓負責 Red Bull x Gate.com 合作夥伴關係及全球活動頁面的高保真 UX 設計。他的工作確保了 Web3 功能與頂級賽車品牌的無縫整合，並在多個廣告活動中維持了嚴格的交付標準。'],
+    ['Boston University：設計教學', '帶領過 30+ 位學生把設計策略落地。', '身為兼任教授，Harry 帶領超過 30 位學生參與「設計策略與軟體」課程。他指導新秀人才將創意策略與 Adobe 創意軟體結合，彌平理論設計與技術執行之間的差距。'],
+    ['The UPS Store：營收與印務優化', '用數位印務與設計整合提升效率。', '擔任數位印務專家，徹底改變了店面的營運效率與客戶介面。透過提升列印服務與整合平面設計，他推動了每月營收增長 25%，並將該店的區域排名提升至麻州第五名。'],
+    ['MIT Media Lab：人機互動研究', '參與 Human 2.0 與 AI、BCI、義肢研究。', '參與 MIT Media Lab 的進階培訓，為「Human 2.0」義肢硬體專案與「NeuraFutures」研究做出貢獻。Harry 探索了生成式 AI、腦機介面 (BCIs) 與義肢的交集，將複雜的科學研究轉化為具體的設計概念。'],
+    ['BJ\'s Wholesale Club：動態視覺', '為 NASCAR 與 Nationals 專案製作視覺。', '為 NASCAR 和 Nationals Park 廣告活動等全國性專案開發動態視覺內容。他的角色包括創作引人入勝的社群動態圖形，並重新設計數位通路的視覺，以確保品牌敘事的一致性。'],
+    ['MassArt：DMI 網站設計', '優化網站架構與圖像內容，提升體驗。', '優化了動態媒體研究所 (DMI) 網路平台的架構效能。透過精簡圖像資料庫並管理複雜的論文內容，他顯著提升了學術社群內的網站載入時間與使用者參與度。'],
+    ['ABC Design：多媒體系統', '建立跨數位與實體的品牌視覺。', '作為台中的核心平面設計師，Harry 開發了全面的視覺識別系統與高階圖像解決方案。他在 ABC Design 的工作專注於將複雜的品牌理念轉化為引人入勝的視覺敘事，確保數位與實體接觸點的一致性。'],
+    ['Cocooks：App 視覺與 UX', '打造直覺的料理平台。', '為美食科技新創 Cocooks 打造使用者體驗與視覺設計，將這款應用程式定位為創新且直覺的平台，無縫串聯料理食譜、社群互動與在地食材採購。'],
+    ['Her Way Home：演出視覺', '為音樂演出設計動態畫面。', '為 Her Way Home 巡迴演出開發沉浸式動態圖像與舞台視覺。結合聲音反應視覺與敘事動畫，營造出與現場表演同步的強烈氛圍，提升了整體的音樂體驗。'],
+    ['Fresh Media：展覽作品', '以互動與計算媒體參與展出。', '作為 MassArt 動態媒體研究所獲選藝術家，Harry 在著名的 Boston Cyberarts 藝廊展示了互動運算媒體作品。他的參展作品結合了基於時間的數位美學與體驗設計，展現了對影音與感測驅動藝術的前瞻性思維。'],
+    ['ARCCSRL：義肢研究', '探索人機互動與助行設計。', '在 MIT Media Lab 參與 ARCCSRL 計畫，探索人機互動與義肢硬體的交集。在原有的 HoloLens 上搭建視覺輔助 GUI 結合新型連續型機器人肢體，讓測試者透過眼動追蹤與語音指令來進行高階、直覺的控制。<br><br>將使用者測試所收集到的複雜實驗數據、多維度的伺服馬達角度與末端效應器映射軌跡進行直覺的視覺化設計，其研究與測試成果最終成功展出於 Harvard Innovation Labs 與 MIT Media Lab。'],
+    ['Your Brain on ChatGPT：媒體訪談', '分享對認知負荷與生成式 AI 的觀察。', '在「Your Brain on ChatGPT」專題訪談中，Harry 分享了他對生成式 AI 如何影響人類認知與設計流程的見解。他探討了認知負荷的降低如何改變創意思考與決策模式。'],
+    ['Dream Reality：論文書', '以書籍與裝置呈現清醒夢敘事。', '他的 MFA 畢業論文《Dream Reality》將學術研究轉化為互動式的出版實踐。這個計畫探討了清醒夢的敘事潛力，將實體書本設計與數位擴增實境融合，創造出多層次的閱讀體驗。'],
   ];
 
   const homeProjectZh = [
@@ -230,15 +230,15 @@
     localizeText(root, '.portfolio-button-label', '看完整作品集');
     localizeList(root, '.clients-header .title-solid', ['精選', '經歷', '影響', '出版文章']);
     localizeList(root, '.clients-header .title-outline', ['客戶', '亮點', '力', '報導']);
-    localizeText(root, '.sidebar-label', '[ 視覺設計經歷 ]');
+    localizeList(root, '.sidebar-label', ['[ 視覺設計經歷 ]', '[ 專案 ]', '[ 出版與報導 ]']);
     localizeText(root, '.work-kicker', '索引');
     localizeText(root, '.work-index-head h2', '作品總覽');
     localizeList(root, '.work-table-row--head span', workCardZh.tableHead);
     localizeText(root, '.parallax-title', '科技與人文<br>敘事', { html: true });
     localizeText(root, '.tech-text-box p', '從 Web3 到學術研究，Harry 的作品把靜態畫面變成可沉浸的數位世界。');
     localizeList(root, '.accordion-item .title-text', homeAccordionZh.map((item) => item[0]));
-    localizeList(root, '.accordion-item .preview-text', homeAccordionZh.map((item) => item[1]));
-    localizeList(root, '.accordion-item .full-text', homeAccordionZh.map((item) => item[1]));
+    localizeList(root, '.accordion-item .preview-text', homeAccordionZh.map((item) => item[2].replace(/<br\s*\/?>/gi, ' ')));
+    localizeList(root, '.accordion-item .full-text', homeAccordionZh.map((item) => item[2]), { html: true });
     localizeText(root, '.impact-section .title-solid', '廖先皓 Harry');
     localizeText(root, '.impact-section .title-outline', '影響世界');
 

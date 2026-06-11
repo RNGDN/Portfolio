@@ -2822,6 +2822,7 @@ body {
 
 .site-footer .giant-name {
   max-width: 96%;
+  color: #ffffff;
 }
 
 .footer-meta {
@@ -3001,4 +3002,28 @@ body {
   .impact-section .title-outline {
     margin-top: 2px;
   }
+}
+
+/* =========================================
+   GSAP + Three.js 動畫支援樣式
+========================================= */
+
+/* 當 GSAP 接管時，關閉原本的 CSS 動畫以避免衝突 */
+body.gsap-active .hero-title {
+  animation: none !important;
+}
+
+body.gsap-active .hero-bottom-info {
+  animation: none !important;
+}
+
+/* 字母拆分用 span — inline-block 才能做 transform */
+.hero-title .char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* 單詞拆分用 span */
+.anim-word {
+  display: inline-block;
 }
